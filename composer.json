@@ -1,0 +1,26 @@
+{
+    "name": "artemeon/orm",
+    "license": "MIT",
+    "type": "library",
+    "description": "",
+    "authors": [
+        {
+            "name": "ARTEMEON Management Partner GmbH",
+            "email": "development@artemeon.de"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Artemeon\\Orm\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Artemeon\\Orm\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "artemeon/database": "^2.0",
+        "psr/simple-cache": "^3.0"
+    }
+}
