@@ -27,7 +27,7 @@ class FieldMapper
         $properties = $this->entityMeta->getProperties(get_class($entity));
         foreach ($properties as $config) {
             if ($config[0] === EntityMeta::TYPE_FIELD) {
-                [$type, $setter, $column, $type, $isPrimary] = $config;
+                [$type, $class, $setter, $column, $type, $isPrimary] = $config;
 
                 if (!isset($row[$column])) {
                     continue;
@@ -40,7 +40,7 @@ class FieldMapper
                     throw new OrmException('Could not find primary column in result set');
                 }
 
-                [$type, $setter, $relationTable, $sourceColumn, $targetColumn, $targetClass] = $config;
+                [$type, $class, $setter, $relationTable, $sourceColumn, $targetColumn, $targetClass] = $config;
 
                 $value = new Collection($relationTable, $sourceColumn, $targetColumn, $targetClass, $row[$sourcePrimaryColumn], $this->connection, $this, $this->queryBuilder);
             } else {

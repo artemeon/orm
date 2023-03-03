@@ -40,8 +40,8 @@ class EntityMeta
         $types = $this->getProperties($entityClass);
         foreach ($types as $propertyName => $config) {
             if ($config[0] === self::TYPE_FIELD) {
-                [$type, $setter, $column, $type, $isPrimary] = $config;
-                if ($isPrimary) {
+                [$type, $class, $setter, $column, $type, $isPrimary] = $config;
+                if ($class === $entityClass && $isPrimary) {
                     return $column;
                 }
             }
@@ -67,9 +67,16 @@ class EntityMeta
         $class = new \ReflectionClass($entityClass);
 
         $result = [];
-        $result[$class->getName()] = $this->findTableNameAttribute($class);
+        $tableName = $this->findTableNameAttribute($class);
+        if ($tableName instanceof TableName) {
+            $result[$class->getName()] = $tableName->tableName;
+        }
         while ($parentClass = $class->getParentClass()) {
-            $result[$parentClass->getName()] = $this->findTableNameAttribute($parentClass);
+            $tableName = $this->findTableNameAttribute($parentClass);
+            if ($tableName instanceof TableName) {
+                $result[$parentClass->getName()] = $tableName->tableName;
+            }
+            $class = $parentClass;
         }
 
         return $result;
@@ -103,13 +110,13 @@ class EntityMeta
                     $columnName = $columnParts[1];
                 }
 
-                $result[$property->getName()] = [self::TYPE_FIELD, $setter, $columnName, $type, $tableColumn instanceof TablePrimary];
+                $result[$property->getName()] = [self::TYPE_FIELD, $class->getName(), $setter, $columnName, $type, $tableColumn instanceof TablePrimary];
                 continue;
             }
 
             $oneToMany = $this->findOneToManyAttribute($property);
             if ($oneToMany instanceof OneToMany) {
-                $result[$property->getName()] = [self::TYPE_ONE_TO_MANY, $setter, $oneToMany->relationTable, $oneToMany->sourceColumn, $oneToMany->targetColumn, $oneToMany->targetClass];
+                $result[$property->getName()] = [self::TYPE_ONE_TO_MANY, $class->getName(), $setter, $oneToMany->relationTable, $oneToMany->sourceColumn, $oneToMany->targetColumn, $oneToMany->targetClass];
             }
         }
 
