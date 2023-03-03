@@ -13,6 +13,10 @@ class TableColumn
         public string $dataType,
     )
     {
+        if (str_contains($columnName, '.')) {
+            [$tableName, $columnName] = explode('.', $columnName, 2);
+        }
+
         if (strlen($columnName) > 30) {
             throw new \InvalidArgumentException('The column name must be not larger then 30 characters');
         }

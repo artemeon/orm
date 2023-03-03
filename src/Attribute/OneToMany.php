@@ -8,13 +8,14 @@ use Attribute;
 class OneToMany
 {
     public function __construct(
-        public string $targetTable,
+        public string $relationTable,
         public string $sourceColumn,
         public string $targetColumn,
+        public string $targetClass,
     )
     {
-        if (strlen($targetTable) > 30) {
-            throw new \InvalidArgumentException('The target table name must be not larger then 30 characters');
+        if (strlen($relationTable) > 30) {
+            throw new \InvalidArgumentException('The relation table name must be not larger then 30 characters');
         }
     }
 }

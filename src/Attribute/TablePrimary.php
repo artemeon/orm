@@ -5,7 +5,7 @@ namespace Artemeon\Orm\Attribute;
 use Artemeon\Database\Schema\DataType;
 use Attribute;
 
-#[Attribute(Attribute::TARGET_CLASS)]
+#[Attribute(Attribute::TARGET_PROPERTY)]
 class TablePrimary extends TableColumn
 {
     public function __construct(string $columnName)
