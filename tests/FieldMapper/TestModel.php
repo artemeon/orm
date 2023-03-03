@@ -6,13 +6,12 @@ use Artemeon\Database\Schema\DataType;
 use Artemeon\Orm\Attribute\TableColumn;
 use Artemeon\Orm\Attribute\TableName;
 use Artemeon\Orm\Attribute\TablePrimary;
-use Artemeon\Orm\EntityInterface;
 
 #[TableName('agp_contracts_con')]
-class TestModel implements EntityInterface
+class TestModel extends TestParent
 {
-    #[TablePrimary('test_id')]
-    private string $id;
+    #[TablePrimary('contract_id')]
+    private string $contractId;
 
     #[TableColumn('servicerid', DataType::STR_TYPE_CHAR20)]
     private $strServicerId;
@@ -26,14 +25,14 @@ class TestModel implements EntityInterface
     #[TableColumn('purchasing_relevance', DataType::STR_TYPE_INT)]
     private ?int $purchasingRelevance = 0;
 
-    public function getId(): string
+    public function getContractId(): string
     {
-        return $this->id;
+        return $this->contractId;
     }
 
-    public function setId(string $id): void
+    public function setContractId(string $contractId): void
     {
-        $this->id = $id;
+        $this->contractId = $contractId;
     }
 
     public function getStrServicerId()
