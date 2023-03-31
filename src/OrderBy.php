@@ -8,7 +8,7 @@ namespace Artemeon\Orm;
  * Pass values using the syntax "columnmame ORDER". Don't add "ORDER BY" or commas since this
  * will be done by the mapper.
  */
-class OrmOrderBy
+class OrderBy implements OrderByInterface
 {
     private string $orderBy;
 

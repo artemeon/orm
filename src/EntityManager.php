@@ -3,7 +3,6 @@
 namespace Artemeon\Orm;
 
 use Artemeon\Database\ConnectionInterface;
-use Artemeon\Orm\Condition\OrmConditionInterface;
 
 class EntityManager
 {
@@ -19,8 +18,8 @@ class EntityManager
     }
 
     /**
-     * @param array<OrmConditionInterface> $conditions
-     * @param array<OrmOrderBy> $sorting
+     * @param array<ConditionInterface> $conditions
+     * @param array<OrderByInterface> $sorting
      * @return array<EntityInterface>
      * @throws Exception\OrmException
      */
@@ -40,8 +39,8 @@ class EntityManager
     }
 
     /**
-     * @param array<OrmConditionInterface> $conditions
-     * @param array<OrmOrderBy> $sorting
+     * @param array<ConditionInterface> $conditions
+     * @param array<OrderByInterface> $sorting
      * @throws Exception\OrmException
      */
     public function findOne(string $targetClass, array $conditions = [], array $sorting = []): ?EntityInterface
@@ -59,7 +58,7 @@ class EntityManager
     }
 
     /**
-     * @param array<OrmConditionInterface> $conditions
+     * @param array<ConditionInterface> $conditions
      * @throws Exception\OrmException
      */
     public function getCount(string $targetClass, array $conditions): int
@@ -69,8 +68,8 @@ class EntityManager
 
         $params = [];
         foreach ($conditions as $condition) {
-            $query.= $condition->getStrWhere() . ' ';
-            $params = array_merge($params, $condition->getArrParams());
+            $query.= $condition->getWhere() . ' ';
+            $params = array_merge($params, $condition->getParams());
         }
 
         $row = $this->connection->fetchOne($query, $params);

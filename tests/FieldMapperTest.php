@@ -37,12 +37,16 @@ class FieldMapperTest extends TestCase
                     'inhouseservice' => '8',
                     'outsourcing_i' => 'bar',
                     'purchasing_relevance' => 16,
+                    'system_id' => 'test',
+                    'owner' => 'owner',
                 ],
                 [
                     'getStrServicerId' => 'foo',
                     'getIntInhouseService' => 8,
                     'getOutsourcingInstitution' => 'bar',
                     'getPurchasingRelevance' => 16,
+                    'getSystemId' => 'test',
+                    'getOwner' => 'owner',
                 ]
             ]
         ];
