@@ -13,29 +13,31 @@ class FieldMapper
 {
     private EntityMeta $entityMeta;
     private ConnectionInterface $connection;
+    private Converter $converter;
     private QueryBuilder $queryBuilder;
 
-    public function __construct(EntityMeta $entityMeta, ConnectionInterface $connection)
+    public function __construct(EntityMeta $entityMeta, ConnectionInterface $connection, Converter $converter)
     {
         $this->entityMeta = $entityMeta;
         $this->connection = $connection;
+        $this->converter = $converter;
         $this->queryBuilder = new QueryBuilder($connection, $entityMeta);
     }
 
     public function map(EntityInterface $entity, array $row): void
     {
-        $properties = $this->entityMeta->getProperties(get_class($entity));
+        $properties = $this->entityMeta->getProperties($entity::class);
         foreach ($properties as $config) {
             if ($config[0] === EntityMeta::TYPE_FIELD) {
-                [$type, $class, $setter, $column, $type, $isPrimary] = $config;
+                [$fieldType, $class, $setter, $getter, $columnName, $dataType, $type, $length, $nullable, $default, $isPrimary] = $config;
 
-                if (!isset($row[$column])) {
+                if (!isset($row[$columnName])) {
                     continue;
                 }
 
-                $value = $this->convertToDataType($row[$column], $type);
+                $value = $this->converter->toPHPType($row[$columnName], $dataType);
             } elseif ($config[0] === EntityMeta::TYPE_ONE_TO_MANY) {
-                $sourcePrimaryColumn = $this->entityMeta->getPrimaryColumn(get_class($entity));
+                $sourcePrimaryColumn = $this->entityMeta->getPrimaryColumn($entity::class);
                 if (!isset($row[$sourcePrimaryColumn])) {
                     throw new OrmException('Could not find primary column in result set');
                 }
@@ -51,17 +53,4 @@ class FieldMapper
         }
     }
 
-    /**
-     * Casts the values datatype based on the value of the var annotation.
-     */
-    public function convertToDataType(mixed $value, string $dataType): mixed
-    {
-        return match ($dataType) {
-            'int', 'long', DataType::STR_TYPE_INT, DataType::STR_TYPE_BIGINT, DataType::STR_TYPE_LONG => (int) $value,
-            'float', DataType::STR_TYPE_FLOAT, DataType::STR_TYPE_DOUBLE => (float) $value,
-            'string', DataType::STR_TYPE_CHAR10, DataType::STR_TYPE_CHAR20, DataType::STR_TYPE_CHAR100, DataType::STR_TYPE_CHAR254, DataType::STR_TYPE_CHAR500, DataType::STR_TYPE_TEXT, DataType::STR_TYPE_LONGTEXT => $value,
-            'bool', 'boolean' => (bool) $value,
-            default => new $dataType($value),
-        };
-    }
 }

@@ -40,9 +40,9 @@ class EntityMeta
         $types = $this->getProperties($entityClass);
         foreach ($types as $propertyName => $config) {
             if ($config[0] === self::TYPE_FIELD) {
-                [$type, $class, $setter, $column, $type, $isPrimary] = $config;
+                [$fieldType, $class, $setter, $getter, $columnName, $dataType, $type, $length, $nullable, $default, $isPrimary] = $config;
                 if ($class === $entityClass && $isPrimary) {
-                    return $column;
+                    return $columnName;
                 }
             }
         }
@@ -99,10 +99,15 @@ class EntityMeta
                 continue;
             }
 
+            $getter = $this->getGetter($class, $property->getName());
+            if ($getter === null) {
+                continue;
+            }
+
             $tableColumn = $this->findTableColumnAttribute($property);
             if ($tableColumn instanceof TableColumn) {
                 $columnName = $tableColumn->columnName;
-                $type = $this->getTypeForProperty($property, $tableColumn->dataType);
+                $dataType = $this->getTypeForProperty($property, $tableColumn->type);
 
                 // BC layer in case the column contains also the table name
                 $columnParts = explode('.', $columnName);
@@ -110,13 +115,13 @@ class EntityMeta
                     $columnName = $columnParts[1];
                 }
 
-                $result[$property->getName()] = [self::TYPE_FIELD, $class->getName(), $setter, $columnName, $type, $tableColumn instanceof TablePrimary];
+                $result[$property->getName()] = [self::TYPE_FIELD, $class->getName(), $setter, $getter, $columnName, $dataType, $tableColumn->type, $tableColumn->length, $tableColumn->nullable, $tableColumn->default, $tableColumn instanceof TablePrimary];
                 continue;
             }
 
             $oneToMany = $this->findOneToManyAttribute($property);
             if ($oneToMany instanceof OneToMany) {
-                $result[$property->getName()] = [self::TYPE_ONE_TO_MANY, $class->getName(), $setter, $oneToMany->relationTable, $oneToMany->sourceColumn, $oneToMany->targetColumn, $oneToMany->targetClass];
+                $result[$property->getName()] = [self::TYPE_ONE_TO_MANY, $class->getName(), $setter, $getter, $oneToMany->relationTable, $oneToMany->sourceColumn, $oneToMany->targetColumn, $oneToMany->targetClass];
             }
         }
 
@@ -204,5 +209,33 @@ class EntityMeta
         }
 
         return $setter;
+    }
+
+    private function getGetter(\ReflectionClass $class, string $propertyName): ?string
+    {
+        $getter = null;
+
+        $arrGetters = [
+            'get' . $propertyName,
+            'getStr' . $propertyName,
+            'getInt' . $propertyName,
+            'getFloat' . $propertyName,
+            'getBit' . $propertyName,
+            'getObj' . $propertyName,
+            'getArr' . $propertyName,
+            'getLong' . $propertyName,
+            'is' . $propertyName,
+            'should' . $propertyName,
+        ];
+
+        foreach ($arrGetters as $strOneGetter) {
+            if ($class->hasMethod($strOneGetter)) {
+                $getter = $strOneGetter;
+
+                break;
+            }
+        }
+
+        return $getter;
     }
 }

@@ -10,7 +10,10 @@ class TableColumn
 {
     public function __construct(
         public string $columnName,
-        public string $dataType,
+        public string $type,
+        public ?int   $length = null,
+        public ?bool  $nullable = null,
+        public mixed  $default = null,
     )
     {
         if (str_contains($columnName, '.')) {
@@ -21,7 +24,7 @@ class TableColumn
             throw new \InvalidArgumentException('The column name must be not larger then 30 characters');
         }
 
-        if (!in_array($dataType, [
+        if (!in_array($type, [
             DataType::STR_TYPE_INT,
             DataType::STR_TYPE_BIGINT,
             DataType::STR_TYPE_LONG,

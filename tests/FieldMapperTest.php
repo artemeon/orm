@@ -3,6 +3,7 @@
 namespace Artemeon\Orm\Tests;
 
 use Artemeon\Database\MockConnection;
+use Artemeon\Orm\Converter;
 use Artemeon\Orm\EntityInterface;
 use Artemeon\Orm\EntityMeta;
 use Artemeon\Orm\FieldMapper;
@@ -19,7 +20,7 @@ class FieldMapperTest extends TestCase
     public function testMap(EntityInterface $entity, array $row, array $expects): void
     {
         $meta = new EntityMeta(new Psr16Cache(new ArrayAdapter()));
-        $mapper = new FieldMapper($meta, new MockConnection());
+        $mapper = new FieldMapper($meta, new MockConnection(), new Converter());
         $mapper->map($entity, $row);
 
         foreach ($expects as $getter => $expect) {

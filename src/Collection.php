@@ -33,7 +33,7 @@ class Collection extends AbstractLazyCollection
         $this->queryBuilder = $queryBuilder;
     }
 
-    protected function doInitialize()
+    protected function doInitialize(): void
     {
         $this->collection = new ArrayCollection();
 
