@@ -3,8 +3,8 @@ on:
   - pull_request
   - push
 jobs:
-  psalm:
-    name: Psalm
+  phpunit:
+    name: PHPUnit
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
