@@ -12,17 +12,17 @@ use Artemeon\Orm\EntityInterface;
 class TestParent implements EntityInterface
 {
     #[TablePrimary('system_id')]
-    private string $systemId;
+    private ?string $systemId = null;
 
     #[TableColumn('owner', DataType::STR_TYPE_CHAR20)]
     private ?string $owner = null;
 
-    public function getSystemId(): string
+    public function getSystemId(): ?string
     {
         return $this->systemId;
     }
 
-    public function setSystemId(string $systemId): void
+    public function setSystemId(?string $systemId): void
     {
         $this->systemId = $systemId;
     }

@@ -27,7 +27,7 @@ class TestModel extends TestParent
     #[TableColumn('purchasing_relevance', DataType::STR_TYPE_INT)]
     private ?int $purchasingRelevance = 0;
 
-    #[OneToMany('agp_contracts_con2foo', 'contract_id', 'system_id', TestParent::class)]
+    #[OneToMany('agp_contracts_con2foo', 'contract_id', 'system_id', [TestParent::class])]
     private ?Collection $relations = null;
 
     public function getContractId(): string

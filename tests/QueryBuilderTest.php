@@ -20,7 +20,7 @@ class QueryBuilderTest extends TestCase
 
         $actual = $queryBuilder->buildFrom(TestModel::class);
         $expect = <<<SQL
-FROM agp_contracts_con AS agp_contracts_con INNER JOIN agp_system AS agp_system ON system_id = contract_id
+FROM agp_contracts_con AS agp_contracts_con INNER JOIN agp_system AS agp_system ON agp_system.system_id = contract_id
 SQL;
 
         $this->assertEquals($expect, $actual);

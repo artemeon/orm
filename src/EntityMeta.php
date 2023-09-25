@@ -50,6 +50,22 @@ class EntityMeta
         throw new OrmException('Could not find primary column for entity ' . $entityClass . ' maybe you have forgotten to add a TablePrimary attribute?');
     }
 
+    public function getPrimaryId(EntityInterface $entity): ?string
+    {
+        $properties = $this->getProperties($entity::class);
+        foreach ($properties as $config) {
+            if ($config[0] === EntityMeta::TYPE_FIELD) {
+                [$fieldType, $class, $setter, $getter, $columnName, $dataType, $type, $length, $nullable, $default, $isPrimary] = $config;
+
+                if ($isPrimary) {
+                    return $entity->{$getter}();
+                }
+            }
+        }
+
+        return null;
+    }
+
     public function getTableNames(string $entityClass): array
     {
         $cacheKey = 'entity-meta-table-names-' . str_replace('\\', '-', $entityClass);

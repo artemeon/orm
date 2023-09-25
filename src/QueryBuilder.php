@@ -36,7 +36,7 @@ class QueryBuilder
             if ($firstPrimaryKey === null) {
                 $firstPrimaryKey = $primaryColumn;
                 if ($joinColumn !== null) {
-                    $parts[] = 'INNER JOIN ' . $enclosedTable . ' AS ' . $enclosedTable . ' ON ' . $primaryColumn . ' = ' . $joinColumn;
+                    $parts[] = 'INNER JOIN ' . $enclosedTable . ' AS ' . $enclosedTable . ' ON ' . $enclosedTable . '.' . $primaryColumn . ' = ' . $joinColumn;
                 } else {
                     $parts[] = 'FROM ' . $enclosedTable . ' AS ' . $enclosedTable;
                 }
@@ -44,7 +44,7 @@ class QueryBuilder
                 if (in_array($tableName, $this->blockedTableAlias)) {
                     $parts[] = 'INNER JOIN ' . $enclosedTable . ' ON ' . $primaryColumn . ' = ' . $firstPrimaryKey;
                 } else {
-                    $parts[] = 'INNER JOIN ' . $enclosedTable . ' AS ' . $enclosedTable . ' ON ' . $primaryColumn . ' = ' . $firstPrimaryKey;
+                    $parts[] = 'INNER JOIN ' . $enclosedTable . ' AS ' . $enclosedTable . ' ON ' . $enclosedTable . '.' . $primaryColumn . ' = ' . $firstPrimaryKey;
                 }
             }
         }

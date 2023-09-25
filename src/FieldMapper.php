@@ -26,6 +26,11 @@ class FieldMapper
 
     public function map(EntityInterface $entity, array $row): void
     {
+        $sourcePrimaryColumn = $this->entityMeta->getPrimaryColumn($entity::class);
+        if (!isset($row[$sourcePrimaryColumn])) {
+            throw new OrmException('Could not find primary column in result set');
+        }
+
         $properties = $this->entityMeta->getProperties($entity::class);
         foreach ($properties as $config) {
             if ($config[0] === EntityMeta::TYPE_FIELD) {
@@ -37,14 +42,9 @@ class FieldMapper
 
                 $value = $this->converter->toPHPType($row[$columnName], $dataType);
             } elseif ($config[0] === EntityMeta::TYPE_ONE_TO_MANY) {
-                $sourcePrimaryColumn = $this->entityMeta->getPrimaryColumn($entity::class);
-                if (!isset($row[$sourcePrimaryColumn])) {
-                    throw new OrmException('Could not find primary column in result set');
-                }
+                [$type, $class, $setter, $getter, $relationTable, $sourceColumn, $targetColumn, $types] = $config;
 
-                [$type, $class, $setter, $relationTable, $sourceColumn, $targetColumn, $targetClass] = $config;
-
-                $value = new Collection($relationTable, $sourceColumn, $targetColumn, $targetClass, $row[$sourcePrimaryColumn], $this->connection, $this, $this->queryBuilder);
+                $value = new Collection($relationTable, $sourceColumn, $targetColumn, $types, $row[$sourcePrimaryColumn], $this->connection, $this, $this->queryBuilder);
             } else {
                 throw new OrmException('Provided an invalid property type config');
             }

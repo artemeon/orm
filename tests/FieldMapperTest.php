@@ -34,6 +34,7 @@ class FieldMapperTest extends TestCase
             [
                 new TestModel(),
                 [
+                    'contract_id' => 'test',
                     'servicerid' => 'foo',
                     'inhouseservice' => '8',
                     'outsourcing_i' => 'bar',
@@ -42,6 +43,7 @@ class FieldMapperTest extends TestCase
                     'owner' => 'owner',
                 ],
                 [
+                    'getContractId' => 'test',
                     'getStrServicerId' => 'foo',
                     'getIntInhouseService' => 8,
                     'getOutsourcingInstitution' => 'bar',

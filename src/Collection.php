@@ -37,11 +37,11 @@ class Collection extends AbstractLazyCollection
     {
         $this->collection = new ArrayCollection();
 
-        $from = $this->queryBuilder->buildFrom($this->type[0], $this->targetColumn);
-        $query = 'SELECT * FROM ' . $this->relationTable . ' ' . $from . ' WHERE ' . $this->sourceColumn . ' = ?';
+        $from = $this->queryBuilder->buildFrom($this->type[0], 'rel.' . $this->sourceColumn);
+        $query = 'SELECT * FROM ' . $this->relationTable . ' AS rel ' . $from . ' WHERE rel.' . $this->sourceColumn . ' = ?';
 
         $result = $this->connection->fetchAllAssociative($query, [$this->primaryValue]);
-        $entityClass = $this->type;
+        $entityClass = $this->type[0];
 
         foreach ($result as $row) {
             $entity = new $entityClass();

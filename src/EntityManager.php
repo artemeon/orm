@@ -4,6 +4,7 @@ namespace Artemeon\Orm;
 
 use Artemeon\Database\ConnectionInterface;
 use Artemeon\Orm\Exception\OrmException;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 
 class EntityManager
@@ -142,18 +143,7 @@ class EntityManager
                     $data[$tableName][$columnName] = $this->converter->toDatabaseType($entity->{$getter}(), $type);
                 }
             } elseif ($config[0] === EntityMeta::TYPE_ONE_TO_MANY) {
-                [$type, $class, $setter, $getter, $relationTable, $sourceColumn, $targetColumn, $targetClass] = $config;
-
-                $value = $entity->{$getter}();
-                if ($value === null) {
-                    continue;
-                }
-
-                if (!$value instanceof DoctrineCollection) {
-                    throw new OrmException('Provided one to many property must return a ' . DoctrineCollection::class);
-                }
-
-                $relations[] = [$value, $relationTable, $sourceColumn, $targetColumn, $targetClass];
+                $relations[] = $this->getRelation($entity, $config);
             } else {
                 throw new OrmException('Provided an invalid property type config');
             }
@@ -163,22 +153,7 @@ class EntityManager
             $this->connection->insert($tableName, $values);
         }
 
-        foreach ($relations as $relation) {
-            [$collection, $relationTable, $sourceColumn, $targetColumn, $targetClass] = $relation;
-
-            $this->connection->delete($relationTable, [$sourceColumn => $sourcePrimaryId]);
-            foreach ($collection as $relationEntity) {
-                $relationEntityId = $this->getPrimaryId($relationEntity);
-                if (empty($relationEntityId)) {
-                    $relationEntityId = $this->insert($relationEntity);
-                }
-
-                $this->connection->insert($relationTable, [
-                    $sourceColumn => $sourcePrimaryId,
-                    $targetColumn => $relationEntityId,
-                ]);
-            }
-        }
+        $this->handleRelations($entity, $relations);
 
         $this->connection->transactionCommit();
 
@@ -213,23 +188,7 @@ class EntityManager
                     $data[$tableName][$columnName] = $this->converter->toDatabaseType($entity->{$getter}(), $type);
                 }
             } elseif ($config[0] === EntityMeta::TYPE_ONE_TO_MANY) {
-                $sourcePrimaryColumn = $this->entityMeta->getPrimaryColumn($entity::class);
-                if (!isset($row[$sourcePrimaryColumn])) {
-                    throw new OrmException('Could not find primary column in result set');
-                }
-
-                [$type, $class, $setter, $getter, $relationTable, $sourceColumn, $targetColumn, $targetClass] = $config;
-
-                $value = $entity->{$getter}();
-                if ($value === null) {
-                    continue;
-                }
-
-                if (!$value instanceof Collection) {
-                    throw new OrmException('Provided one to many property must return a ' . Collection::class);
-                }
-
-                $relations[] = [$value, $row[$sourcePrimaryColumn], $relationTable, $sourceColumn, $targetColumn, $targetClass];
+                $relations[] = $this->getRelation($entity, $config);
             } else {
                 throw new OrmException('Provided an invalid property type config');
             }
@@ -239,22 +198,7 @@ class EntityManager
             $this->connection->update($tableName, $values, $identifiers[$tableName] ?? throw new OrmException('No primary key exists for table ' . $tableName));
         }
 
-        foreach ($relations as $relation) {
-            [$collection, $sourcePrimaryId, $relationTable, $sourceColumn, $targetColumn, $targetClass] = $relation;
-
-            $this->connection->delete($relationTable, [$sourceColumn => $sourcePrimaryId]);
-            foreach ($collection as $relationEntity) {
-                $relationEntityId = $this->getPrimaryId($relationEntity);
-                if (empty($relationEntityId)) {
-                    $relationEntityId = $this->insert($relationEntity);
-                }
-
-                $this->connection->insert($relationTable, [
-                    $sourceColumn => $sourcePrimaryId,
-                    $targetColumn => $relationEntityId,
-                ]);
-            }
-        }
+        $this->handleRelations($entity, $relations);
 
         $this->connection->transactionCommit();
     }
@@ -281,23 +225,7 @@ class EntityManager
                     $identifiers[$tableName][$columnName] = $entity->{$getter}();
                 }
             } elseif ($config[0] === EntityMeta::TYPE_ONE_TO_MANY) {
-                $sourcePrimaryColumn = $this->entityMeta->getPrimaryColumn($entity::class);
-                if (!isset($row[$sourcePrimaryColumn])) {
-                    throw new OrmException('Could not find primary column in result set');
-                }
-
-                [$type, $class, $setter, $getter, $relationTable, $sourceColumn, $targetColumn, $targetClass] = $config;
-
-                $value = $entity->{$getter}();
-                if ($value === null) {
-                    continue;
-                }
-
-                if (!$value instanceof Collection) {
-                    throw new OrmException('Provided one to many property must return a ' . Collection::class);
-                }
-
-                $relations[] = [$value, $row[$sourcePrimaryColumn], $relationTable, $sourceColumn, $targetColumn, $targetClass];
+                $relations[] = $this->getRelation($entity, $config);
             } else {
                 throw new OrmException('Provided an invalid property type config');
             }
@@ -307,8 +235,10 @@ class EntityManager
             $this->connection->delete($tableName, $identifier);
         }
 
+        $sourcePrimaryId = $this->entityMeta->getPrimaryId($entity);
+
         foreach ($relations as $relation) {
-            [$collection, $sourcePrimaryId, $relationTable, $sourceColumn, $targetColumn, $targetClass] = $relation;
+            [$collection, $relationTable, $sourceColumn, $targetColumn, $types] = $relation;
 
             $this->connection->delete($relationTable, [$sourceColumn => $sourcePrimaryId]);
         }
@@ -316,20 +246,43 @@ class EntityManager
         $this->connection->transactionCommit();
     }
 
-    private function getPrimaryId(EntityInterface $entity): ?string
+    private function getRelation(EntityInterface $entity, array $config): array
     {
-        $properties = $this->entityMeta->getProperties($entity::class);
-        foreach ($properties as $config) {
-            if ($config[0] === EntityMeta::TYPE_FIELD) {
-                [$fieldType, $class, $setter, $getter, $columnName, $dataType, $type, $length, $nullable, $default, $isPrimary] = $config;
+        [$type, $class, $setter, $getter, $relationTable, $sourceColumn, $targetColumn, $types] = $config;
 
-                if ($isPrimary) {
-                    return $entity->{$getter}();
-                }
-            }
+        $value = $entity->{$getter}();
+
+        if ($value === null) {
+            $value = new ArrayCollection();
         }
 
-        return null;
+        if (!$value instanceof DoctrineCollection) {
+            throw new OrmException('Provided one to many property must return a ' . DoctrineCollection::class);
+        }
+
+        return [$value, $relationTable, $sourceColumn, $targetColumn, $types];
+    }
+
+    private function handleRelations(EntityInterface $entity, array $relations): void
+    {
+        $sourcePrimaryId = $this->entityMeta->getPrimaryId($entity);
+
+        foreach ($relations as $relation) {
+            [$collection, $relationTable, $sourceColumn, $targetColumn, $types] = $relation;
+
+            $this->connection->delete($relationTable, [$sourceColumn => $sourcePrimaryId]);
+            foreach ($collection as $relationEntity) {
+                $relationEntityId = $this->entityMeta->getPrimaryId($relationEntity);
+                if (empty($relationEntityId)) {
+                    $relationEntityId = $this->insert($relationEntity);
+                }
+
+                $this->connection->insert($relationTable, [
+                    $sourceColumn => $sourcePrimaryId,
+                    $targetColumn => $relationEntityId,
+                ]);
+            }
+        }
     }
 
     private function generateSystemId(): string

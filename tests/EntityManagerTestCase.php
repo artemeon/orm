@@ -99,6 +99,7 @@ abstract class EntityManagerTestCase extends TestCase
     private function setupFixture()
     {
         $this->getConnection()->dropTable('agp_contracts_con');
+        $this->getConnection()->dropTable('agp_contracts_con2foo');
         $this->getConnection()->dropTable('agp_system');
 
         $schemaManager = $this->getSchemaManager();

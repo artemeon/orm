@@ -3,6 +3,7 @@
 namespace Artemeon\Orm;
 
 use Artemeon\Database\ConnectionInterface;
+use Artemeon\Database\Schema\DataType;
 use Artemeon\Orm\Exception\OrmException;
 
 class SchemaManager
@@ -19,15 +20,21 @@ class SchemaManager
     public function createTable(string $entityClass): void
     {
         $tableNames = $this->entityMeta->getTableNames($entityClass);
+        $relationTables = [];
 
         foreach ($tableNames as $class => $tableName) {
-            $keys = [];
-            $fields = $this->getFieldsForEntity($class, $keys);
-            $this->connection->createTable($tableName, $fields, $keys);
+            $primaryKeys = [];
+            $fields = $this->getFieldsForEntity($class, $primaryKeys, $relationTables);
+            $this->connection->createTable($tableName, $fields, $primaryKeys);
+        }
+
+        foreach ($relationTables as $tableName => $config) {
+            [$fields, $primaryKeys] = $config;
+            $this->connection->createTable($tableName, $fields, $primaryKeys);
         }
     }
 
-    private function getFieldsForEntity(string $entityClass, array &$keys): array
+    private function getFieldsForEntity(string $entityClass, array &$keys, array &$relationTables): array
     {
         $properties = $this->entityMeta->getProperties($entityClass);
         $fields = [];
@@ -50,8 +57,16 @@ class SchemaManager
                     $default
                 ];
             } elseif ($config[0] === EntityMeta::TYPE_ONE_TO_MANY) {
-                [$type, $class, $setter, $relationTable, $sourceColumn, $targetColumn, $targetClass] = $config;
+                [$type, $class, $setter, $getter, $relationTable, $sourceColumn, $targetColumn, $types] = $config;
 
+                $relationColumns = [
+                    $sourceColumn => [DataType::STR_TYPE_CHAR20, false],
+                    $targetColumn => [DataType::STR_TYPE_CHAR20, false],
+                ];
+
+                $primaryKeys = [$sourceColumn, $targetColumn];
+
+                $relationTables[$relationTable] = [$relationColumns, $primaryKeys];
             } else {
                 throw new OrmException('Provided an invalid property type config');
             }
