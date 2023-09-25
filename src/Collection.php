@@ -9,6 +9,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * The orm assignment array is used to create a lazy loading way of handling object-assignments.
  * In most cases this is transparent, so there's no real usage of this class directly.
+ *
+ * @extends AbstractLazyCollection<string, EntityInterface>
  */
 class Collection extends AbstractLazyCollection
 {

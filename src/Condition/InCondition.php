@@ -65,7 +65,7 @@ class InCondition extends Condition
 
             for ($i = 0; $i < $count; $i++) {
                 $params = array_slice($this->params, $i * self::MAX_IN_VALUES, self::MAX_IN_VALUES);
-                $paramsPlaceholder = array_map(function () {
+                $paramsPlaceholder = array_map(function ($value) {
                     return '?';
                 }, $params);
                 $placeholder = implode(',', $paramsPlaceholder);
@@ -78,7 +78,7 @@ class InCondition extends Condition
                 return '(' . implode(' OR ', $parts) . ')';
             }
         } else {
-            $paramsPlaceholder = array_map(function () {
+            $paramsPlaceholder = array_map(function ($value) {
                 return '?';
             }, $this->params);
             $placeholder = implode(',', $paramsPlaceholder);
