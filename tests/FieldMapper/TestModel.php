@@ -3,9 +3,11 @@
 namespace Artemeon\Orm\Tests\FieldMapper;
 
 use Artemeon\Database\Schema\DataType;
+use Artemeon\Orm\Attribute\OneToMany;
 use Artemeon\Orm\Attribute\TableColumn;
 use Artemeon\Orm\Attribute\TableName;
 use Artemeon\Orm\Attribute\TablePrimary;
+use Doctrine\Common\Collections\Collection;
 
 #[TableName('agp_contracts_con')]
 class TestModel extends TestParent
@@ -24,6 +26,9 @@ class TestModel extends TestParent
 
     #[TableColumn('purchasing_relevance', DataType::STR_TYPE_INT)]
     private ?int $purchasingRelevance = 0;
+
+    #[OneToMany('agp_contracts_con2foo', 'contract_id', 'system_id', TestParent::class)]
+    private ?Collection $relations = null;
 
     public function getContractId(): string
     {
@@ -73,6 +78,16 @@ class TestModel extends TestParent
     public function setPurchasingRelevance(?int $purchasingRelevance): void
     {
         $this->purchasingRelevance = $purchasingRelevance;
+    }
+
+    public function getRelations(): ?Collection
+    {
+        return $this->relations;
+    }
+
+    public function setRelations(?Collection $relations): void
+    {
+        $this->relations = $relations;
     }
 }
 

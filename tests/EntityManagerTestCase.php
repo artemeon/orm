@@ -107,14 +107,11 @@ abstract class EntityManagerTestCase extends TestCase
         $entityManager = $this->getEntityManager();
 
         for ($i = 1; $i <= 50; $i++) {
-            $systemId = $this->generateSystemid();
             $entity = new TestModel();
-            $entity->setContractId($systemId);
             $entity->setStrServicerId($this->generateSystemid());
             $entity->setIntInhouseService(1);
             $entity->setOutsourcingInstitution('foobar');
             $entity->setPurchasingRelevance(1);
-            $entity->setSystemId($systemId);
             $entity->setOwner('foo');
             $entityManager->insert($entity);
         }
