@@ -28,7 +28,7 @@ class FieldMapperTest extends TestCase
         }
     }
 
-    public function mapDataProvider(): array
+    public static function mapDataProvider(): array
     {
         return [
             [
