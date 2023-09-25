@@ -15,18 +15,18 @@ class Collection extends AbstractLazyCollection
     private string $relationTable;
     private string $sourceColumn;
     private string $targetColumn;
-    private string $targetClass;
+    private array $type;
     private string $primaryValue;
     private ConnectionInterface $connection;
     private FieldMapper $mapper;
     private QueryBuilder $queryBuilder;
 
-    public function __construct(string $relationTable, string $sourceColumn, string $targetColumn, string $targetClass, string $primaryValue, ConnectionInterface $connection, FieldMapper $mapper, QueryBuilder $queryBuilder)
+    public function __construct(string $relationTable, string $sourceColumn, string $targetColumn, array $type, string $primaryValue, ConnectionInterface $connection, FieldMapper $mapper, QueryBuilder $queryBuilder)
     {
         $this->relationTable = $relationTable;
         $this->sourceColumn = $sourceColumn;
         $this->targetColumn = $targetColumn;
-        $this->targetClass = $targetClass;
+        $this->type = $type;
         $this->primaryValue = $primaryValue;
         $this->connection = $connection;
         $this->mapper = $mapper;
@@ -37,11 +37,11 @@ class Collection extends AbstractLazyCollection
     {
         $this->collection = new ArrayCollection();
 
-        $from = $this->queryBuilder->buildFrom($this->targetClass, $this->targetColumn);
+        $from = $this->queryBuilder->buildFrom($this->type[0], $this->targetColumn);
         $query = 'SELECT * FROM ' . $this->relationTable . ' ' . $from . ' WHERE ' . $this->sourceColumn . ' = ?';
 
         $result = $this->connection->fetchAllAssociative($query, [$this->primaryValue]);
-        $entityClass = $this->targetClass;
+        $entityClass = $this->type;
 
         foreach ($result as $row) {
             $entity = new $entityClass();

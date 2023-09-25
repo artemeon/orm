@@ -121,7 +121,7 @@ class EntityMeta
 
             $oneToMany = $this->findOneToManyAttribute($property);
             if ($oneToMany instanceof OneToMany) {
-                $result[$property->getName()] = [self::TYPE_ONE_TO_MANY, $class->getName(), $setter, $getter, $oneToMany->relationTable, $oneToMany->sourceColumn, $oneToMany->targetColumn, $oneToMany->targetClass];
+                $result[$property->getName()] = [self::TYPE_ONE_TO_MANY, $class->getName(), $setter, $getter, $oneToMany->relationTable, $oneToMany->sourceColumn, $oneToMany->targetColumn, $oneToMany->type];
             }
         }
 

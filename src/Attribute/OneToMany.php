@@ -11,7 +11,7 @@ class OneToMany
         public string $relationTable,
         public string $sourceColumn,
         public string $targetColumn,
-        public string $targetClass,
+        public array $type,
     )
     {
         if (strlen($relationTable) > 30) {
