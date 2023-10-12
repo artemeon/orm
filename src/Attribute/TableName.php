@@ -8,7 +8,8 @@ use Attribute;
 class TableName
 {
     public function __construct(
-        public string $tableName
+        public string $tableName,
+        public string $primaryColumn,
     )
     {
         if (strlen($tableName) > 30) {
