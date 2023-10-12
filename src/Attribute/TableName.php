@@ -9,7 +9,7 @@ class TableName
 {
     public function __construct(
         public string $tableName,
-        public string $primaryColumn,
+        public ?string $primaryColumn = null,
     )
     {
         if (strlen($tableName) > 30) {
