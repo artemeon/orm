@@ -20,7 +20,7 @@
         }
     },
     "require": {
-        "artemeon/database": "^2.0",
+        "artemeon/database": "^3.1",
         "psr/simple-cache": "^3.0",
         "doctrine/collections": "^2.0"
     },
