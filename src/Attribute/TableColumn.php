@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Artemeon\Orm\Attribute;
 
-use AGP\System\Service\StringUtil;
 use Artemeon\Database\Schema\DataType;
 use Attribute;
 
