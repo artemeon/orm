@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Artemeon\Orm\Attribute;
 
 use Attribute;
@@ -9,11 +11,10 @@ class TableName
 {
     public function __construct(
         public string $tableName,
-        public ?string $primaryColumn = null,
-    )
-    {
+        public string $primaryColumn,
+    ) {
         if (strlen($tableName) > 30) {
-            throw new \InvalidArgumentException('The table name must be not larger then 30 characters');
+            throw new \InvalidArgumentException('The table name must not be larger then 30 characters');
         }
     }
 }

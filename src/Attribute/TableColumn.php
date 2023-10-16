@@ -1,44 +1,44 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Artemeon\Orm\Attribute;
 
+use AGP\System\Service\StringUtil;
 use Artemeon\Database\Schema\DataType;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class TableColumn
 {
+    public string $tableName;
+    public string $columnName;
+    public DataType $columnDataType;
+
     public function __construct(
-        public string $columnName,
-        public string $type,
-        public ?int   $length = null,
-        public ?bool  $nullable = null,
-        public mixed  $default = null,
-    )
-    {
-        if (str_contains($columnName, '.')) {
-            [$tableName, $columnName] = explode('.', $columnName, 2);
+        public string $name,
+        public DataType $type,
+        public ?int $length = null,
+        public ?bool $nullable = null,
+        public mixed $default = null,
+    ) {
+        if (str_contains($name, '.')) {
+            [$tableName, $columnName] = explode('.', $name, 2);
+            $this->tableName = $tableName;
+            $this->columnName = $columnName;
+        } else {
+            $this->columnName = $name;
         }
 
-        if (strlen($columnName) > 30) {
+        if (isset($columnName) && mb_strlen($columnName) > 30) {
             throw new \InvalidArgumentException('The column name must be not larger then 30 characters');
         }
 
-        if (!in_array($type, [
-            DataType::STR_TYPE_INT,
-            DataType::STR_TYPE_BIGINT,
-            DataType::STR_TYPE_LONG,
-            DataType::STR_TYPE_FLOAT,
-            DataType::STR_TYPE_DOUBLE,
-            DataType::STR_TYPE_CHAR10,
-            DataType::STR_TYPE_CHAR20,
-            DataType::STR_TYPE_CHAR100,
-            DataType::STR_TYPE_CHAR254,
-            DataType::STR_TYPE_CHAR500,
-            DataType::STR_TYPE_TEXT,
-            DataType::STR_TYPE_LONGTEXT,
-        ])) {
-            throw new \InvalidArgumentException('Provided an invalid table column data type, please use one of the DataType:: constants');
-        }
+        $this->columnDataType = $this->type;
+    }
+
+    public function getValue()
+    {
+        return $this->name;
     }
 }
