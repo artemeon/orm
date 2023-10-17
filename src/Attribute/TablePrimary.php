@@ -10,6 +10,6 @@ class TablePrimary extends TableColumn
 {
     public function __construct(string $columnName)
     {
-        parent::__construct($columnName, DataType::STR_TYPE_CHAR20);
+        parent::__construct($columnName, DataType::CHAR20);
     }
 }

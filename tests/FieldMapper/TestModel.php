@@ -15,16 +15,16 @@ class TestModel extends TestParent
     #[TablePrimary('contract_id')]
     private string $contractId;
 
-    #[TableColumn('servicerid', DataType::STR_TYPE_CHAR20)]
+    #[TableColumn('servicerid', DataType::CHAR20)]
     private $strServicerId;
 
-    #[TableColumn('inhouseservice', DataType::STR_TYPE_INT)]
+    #[TableColumn('inhouseservice', DataType::INT)]
     private $intInhouseService;
 
-    #[TableColumn('outsourcing_i', DataType::STR_TYPE_CHAR20)]
+    #[TableColumn('outsourcing_i', DataType::CHAR20)]
     private ?string $outsourcingInstitution = null;
 
-    #[TableColumn('purchasing_relevance', DataType::STR_TYPE_INT)]
+    #[TableColumn('purchasing_relevance', DataType::INT)]
     private ?int $purchasingRelevance = 0;
 
     #[OneToMany('agp_contracts_con2foo', 'contract_id', 'system_id', [TestParent::class])]

@@ -16,23 +16,23 @@ class Converter
         $this->converters[$type] = $converter;
     }
 
-    public function toPHPType(mixed $value, string $type): mixed
+    public function toPHPType(mixed $value, string|DataType $type): mixed
     {
         return match ($type) {
-            'string', DataType::STR_TYPE_CHAR10, DataType::STR_TYPE_CHAR20, DataType::STR_TYPE_CHAR100, DataType::STR_TYPE_CHAR254, DataType::STR_TYPE_CHAR500, DataType::STR_TYPE_TEXT, DataType::STR_TYPE_LONGTEXT, DataType::STR_TYPE_BIGINT => (string) $value,
-            DataType::STR_TYPE_INT => (int) $value,
-            'float', DataType::STR_TYPE_FLOAT => (float) $value,
+            'string', DataType::CHAR10, DataType::CHAR20, DataType::CHAR100, DataType::CHAR254, DataType::CHAR500, DataType::TEXT, DataType::LONGTEXT, DataType::BIGINT => (string) $value,
+            'int', DataType::INT => (int) $value,
+            'float', DataType::FLOAT => (float) $value,
             'bool' => (bool) $value,
             default => isset($this->converters[$type]) ? $this->converters[$type]->toPHPType($value) : null,
         };
     }
 
-    public function toDatabaseType(mixed $value, string $type): mixed
+    public function toDatabaseType(mixed $value, string|DataType $type): mixed
     {
         return match ($type) {
-            'string', DataType::STR_TYPE_CHAR10, DataType::STR_TYPE_CHAR20, DataType::STR_TYPE_CHAR100, DataType::STR_TYPE_CHAR254, DataType::STR_TYPE_CHAR500, DataType::STR_TYPE_TEXT, DataType::STR_TYPE_LONGTEXT, DataType::STR_TYPE_BIGINT => (string) $value,
-            DataType::STR_TYPE_INT => (int) $value,
-            'float', DataType::STR_TYPE_FLOAT => (float) $value,
+            'string', DataType::CHAR10, DataType::CHAR20, DataType::CHAR100, DataType::CHAR254, DataType::CHAR500, DataType::TEXT, DataType::LONGTEXT, DataType::BIGINT => (string) $value,
+            'int', DataType::INT => (int) $value,
+            'float', DataType::FLOAT => (float) $value,
             'bool' => $value ? 1 : 0,
             default => isset($this->converters[$type]) ? $this->converters[$type]->toDatabaseType($value) : null,
         };

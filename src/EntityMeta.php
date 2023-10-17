@@ -2,6 +2,7 @@
 
 namespace Artemeon\Orm;
 
+use Artemeon\Database\Schema\DataType;
 use Artemeon\Orm\Attribute\OneToMany;
 use Artemeon\Orm\Attribute\TableColumn;
 use Artemeon\Orm\Attribute\TableName;
@@ -180,7 +181,7 @@ class EntityMeta
         return null;
     }
 
-    private function getTypeForProperty(\ReflectionProperty $property, string $dataType): string
+    private function getTypeForProperty(\ReflectionProperty $property, DataType $dataType): string|DataType
     {
         $type = $this->getTypeHintForProperty($property);
         if ($type !== null) {

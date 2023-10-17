@@ -14,7 +14,7 @@ class TestParent implements EntityInterface
     #[TablePrimary('system_id')]
     private ?string $systemId = null;
 
-    #[TableColumn('owner', DataType::STR_TYPE_CHAR20)]
+    #[TableColumn('owner', DataType::CHAR20)]
     private ?string $owner = null;
 
     public function getSystemId(): ?string

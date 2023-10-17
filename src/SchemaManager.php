@@ -60,8 +60,8 @@ class SchemaManager
                 [$type, $class, $setter, $getter, $relationTable, $sourceColumn, $targetColumn, $types] = $config;
 
                 $relationColumns = [
-                    $sourceColumn => [DataType::STR_TYPE_CHAR20, false],
-                    $targetColumn => [DataType::STR_TYPE_CHAR20, false],
+                    $sourceColumn => [DataType::CHAR20, false],
+                    $targetColumn => [DataType::CHAR20, false],
                 ];
 
                 $primaryKeys = [$sourceColumn, $targetColumn];
