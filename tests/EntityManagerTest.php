@@ -40,7 +40,6 @@ class EntityManagerTest extends EntityManagerTestCase
         $entity->setRelations($collection);
         $this->getEntityManager()->insert($entity);
 
-        $this->assertInstanceOf(TestModel::class, $entity);
         $this->assertNotEmpty($entity->getContractId());
     }
 
@@ -57,7 +56,6 @@ class EntityManagerTest extends EntityManagerTestCase
 
         $this->getEntityManager()->update($entity);
 
-        $this->assertInstanceOf(TestModel::class, $entity);
         $this->assertNotEmpty($entity->getContractId());
     }
 
@@ -68,7 +66,6 @@ class EntityManagerTest extends EntityManagerTestCase
 
         $this->getEntityManager()->delete($entity);
 
-        $this->assertInstanceOf(TestModel::class, $entity);
         $this->assertNotEmpty($entity->getContractId());
     }
 }
