@@ -78,12 +78,9 @@ class InCondition extends Condition
                 return '(' . implode(' OR ', $parts) . ')';
             }
         } else {
-            $paramsPlaceholder = array_map(function ($value) {
-                return '?';
-            }, $this->params);
-            $placeholder = implode(',', $paramsPlaceholder);
+            $placeholder = trim(str_repeat('?,', count($this->params)), ',');
 
-            if (!empty($placeholder)) {
+            if ($placeholder) {
                 return "{$columnName} {$operator} ({$placeholder})";
             }
         }
