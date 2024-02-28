@@ -1,7 +1,9 @@
 name: PHPUnit
 on:
-  - pull_request
-  - push
+  pull_request:
+  push:
+    branches:
+      - main
 jobs:
   phpunit:
     name: PHPUnit
