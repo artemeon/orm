@@ -44,7 +44,7 @@ class FieldMapper
             } elseif ($config[0] === EntityMeta::TYPE_ONE_TO_MANY) {
                 [$type, $class, $setter, $getter, $relationTable, $sourceColumn, $targetColumn, $types] = $config;
 
-                $value = new Collection($relationTable, $sourceColumn, $targetColumn, $types, $row[$sourcePrimaryColumn], $this->connection, $this, $this->queryBuilder);
+                $value = new Collection($relationTable, $sourceColumn, $types, $row[$sourcePrimaryColumn], $this->connection, $this, $this->queryBuilder);
             } else {
                 throw new OrmException('Provided an invalid property type config');
             }

@@ -16,18 +16,16 @@ class Collection extends AbstractLazyCollection
 {
     private string $relationTable;
     private string $sourceColumn;
-    private string $targetColumn;
     private array $type;
     private string $primaryValue;
     private ConnectionInterface $connection;
     private FieldMapper $mapper;
     private QueryBuilder $queryBuilder;
 
-    public function __construct(string $relationTable, string $sourceColumn, string $targetColumn, array $type, string $primaryValue, ConnectionInterface $connection, FieldMapper $mapper, QueryBuilder $queryBuilder)
+    public function __construct(string $relationTable, string $sourceColumn, array $type, string $primaryValue, ConnectionInterface $connection, FieldMapper $mapper, QueryBuilder $queryBuilder)
     {
         $this->relationTable = $relationTable;
         $this->sourceColumn = $sourceColumn;
-        $this->targetColumn = $targetColumn;
         $this->type = $type;
         $this->primaryValue = $primaryValue;
         $this->connection = $connection;

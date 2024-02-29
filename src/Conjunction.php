@@ -9,13 +9,9 @@ enum Conjunction
 
     public function toSql(): string
     {
-        switch ($this) {
-            case self::AND:
-                return 'AND';
-            case self::OR:
-                return 'OR';
-        }
-
-        throw new \RuntimeException('Invalid value');
+        return match ($this) {
+            self::AND => 'AND',
+            default => 'OR',
+        };
     }
 }
