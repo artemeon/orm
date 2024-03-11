@@ -35,11 +35,6 @@ abstract class EntityManagerTestCase extends TestCase
         $this->setupFixture();
     }
 
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-    }
-
     protected function getConnection(): ConnectionInterface
     {
         if (self::$connection) {
