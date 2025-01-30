@@ -19,7 +19,7 @@ class QueryBuilderTest extends TestCase
         $queryBuilder = new QueryBuilder($connection, $entityMeta);
 
         $actual = $queryBuilder->buildFrom(TestModel::class);
-        $expect = <<<'SQL'
+        $expect = <<<SQL
 FROM agp_contracts_con AS agp_contracts_con INNER JOIN agp_system AS agp_system ON agp_system.system_id = contract_id
 SQL;
 
