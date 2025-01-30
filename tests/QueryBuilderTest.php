@@ -12,7 +12,7 @@ use Symfony\Component\Cache\Psr16Cache;
 
 class QueryBuilderTest extends TestCase
 {
-    public function testBuildFrom()
+    public function test_build_from()
     {
         $connection = new MockConnection;
         $entityMeta = new EntityMeta(new Psr16Cache(new ArrayAdapter));

@@ -9,21 +9,21 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class EntityManagerTest extends EntityManagerTestCase
 {
-    public function testFindAll(): void
+    public function test_find_all(): void
     {
         $result = $this->getEntityManager()->findAll(TestModel::class);
 
         $this->assertCount(50, $result);
     }
 
-    public function testFind(): void
+    public function test_find(): void
     {
         $result = $this->getEntityManager()->findOne(TestModel::class, [new EqualsCondition('outsourcing_i', 'foobar')]);
 
         $this->assertInstanceOf(TestModel::class, $result);
     }
 
-    public function testInsert(): void
+    public function test_insert(): void
     {
         $relation = new TestParent;
         $relation->setOwner('foobar');
@@ -42,7 +42,7 @@ class EntityManagerTest extends EntityManagerTestCase
         $this->assertNotEmpty($entity->getContractId());
     }
 
-    public function testUpdate(): void
+    public function test_update(): void
     {
         $entity = $this->getEntityManager()->findOne(TestModel::class, [new EqualsCondition('outsourcing_i', 'foobar')]);
         $this->assertInstanceOf(TestModel::class, $entity);
@@ -58,7 +58,7 @@ class EntityManagerTest extends EntityManagerTestCase
         $this->assertNotEmpty($entity->getContractId());
     }
 
-    public function testDelete(): void
+    public function test_delete(): void
     {
         $entity = $this->getEntityManager()->findOne(TestModel::class, [new EqualsCondition('outsourcing_i', 'foobar')]);
         $this->assertInstanceOf(TestModel::class, $entity);
