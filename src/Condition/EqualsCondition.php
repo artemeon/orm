@@ -10,15 +10,8 @@ use function sprintf;
 
 class EqualsCondition implements ConditionInterface
 {
-    private string $columnName;
-    private mixed $value;
-    private bool $negated;
-
-    public function __construct(string $columnName, mixed $value, bool $negated = false)
+    public function __construct(private readonly string $columnName, private readonly mixed $value, private readonly bool $negated = false)
     {
-        $this->columnName = $columnName;
-        $this->value = $value;
-        $this->negated = $negated;
     }
 
     public function getParams(): array

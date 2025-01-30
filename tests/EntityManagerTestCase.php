@@ -37,7 +37,7 @@ abstract class EntityManagerTestCase extends TestCase
 
     protected function getConnection(): ConnectionInterface
     {
-        if (self::$connection) {
+        if (self::$connection !== null) {
             return self::$connection;
         }
 
@@ -56,7 +56,7 @@ abstract class EntityManagerTestCase extends TestCase
 
     protected function getEntityManager(): EntityManager
     {
-        if (self::$entityManager) {
+        if (self::$entityManager !== null) {
             return self::$entityManager;
         }
 
@@ -70,7 +70,7 @@ abstract class EntityManagerTestCase extends TestCase
 
     protected function getSchemaManager(): SchemaManager
     {
-        if (self::$schemaManager) {
+        if (self::$schemaManager !== null) {
             return self::$schemaManager;
         }
 

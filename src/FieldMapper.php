@@ -11,17 +11,11 @@ use Artemeon\Orm\Exception\OrmException;
  */
 class FieldMapper
 {
-    private EntityMeta $entityMeta;
-    private ConnectionInterface $connection;
-    private Converter $converter;
-    private QueryBuilder $queryBuilder;
+    private readonly QueryBuilder $queryBuilder;
 
-    public function __construct(EntityMeta $entityMeta, ConnectionInterface $connection, Converter $converter)
+    public function __construct(private readonly EntityMeta $entityMeta, private readonly ConnectionInterface $connection, private readonly Converter $converter)
     {
-        $this->entityMeta = $entityMeta;
-        $this->connection = $connection;
-        $this->converter = $converter;
-        $this->queryBuilder = new QueryBuilder($connection, $entityMeta);
+        $this->queryBuilder = new QueryBuilder($this->connection, $this->entityMeta);
     }
 
     public function map(EntityInterface $entity, array $row): void

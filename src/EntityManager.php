@@ -9,19 +9,8 @@ use Doctrine\Common\Collections\Collection as DoctrineCollection;
 
 class EntityManager
 {
-    private ConnectionInterface $connection;
-    private QueryBuilder $queryBuilder;
-    private FieldMapper $fieldMapper;
-    private EntityMeta $entityMeta;
-    private Converter $converter;
-
-    public function __construct(ConnectionInterface $connection, QueryBuilder $queryBuilder, FieldMapper $fieldMapper, EntityMeta $entityMeta, Converter $converter)
+    public function __construct(private readonly ConnectionInterface $connection, private readonly QueryBuilder $queryBuilder, private readonly FieldMapper $fieldMapper, private readonly EntityMeta $entityMeta, private readonly Converter $converter)
     {
-        $this->connection = $connection;
-        $this->queryBuilder = $queryBuilder;
-        $this->fieldMapper = $fieldMapper;
-        $this->entityMeta = $entityMeta;
-        $this->converter = $converter;
     }
 
     /**

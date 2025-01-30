@@ -21,33 +21,20 @@ enum Comparator
 
     public function toSql(): string
     {
-        switch ($this) {
-            case self::GREATER_THEN:
-                return '>';
-            case self::GREATER_THEN_EQUALS:
-                return '>=';
-            case self::LESS_THEN:
-                return '<';
-            case self::LESS_THEN_EQUALS:
-                return '<=';
-            case self::EQUAL:
-                return '=';
-            case self::NOT_EQUAL:
-                return '!=';
-            case self::LIKE:
-                return 'LIKE';
-            case self::NOT_LIKE:
-                return 'NOT LIKE';
-            case self::IS_NULL:
-                return 'IS NULL';
-            case self::IS_NOT_NULL:
-                return 'IS NOT NULL';
-            case self::IN:
-                return 'IN';
-            case self::NOT_IN:
-                return 'NOT IN';
-        }
-
-        throw new \RuntimeException('Invalid value');
+        return match ($this) {
+            self::GREATER_THEN => '>',
+            self::GREATER_THEN_EQUALS => '>=',
+            self::LESS_THEN => '<',
+            self::LESS_THEN_EQUALS => '<=',
+            self::EQUAL => '=',
+            self::NOT_EQUAL => '!=',
+            self::LIKE => 'LIKE',
+            self::NOT_LIKE => 'NOT LIKE',
+            self::IS_NULL => 'IS NULL',
+            self::IS_NOT_NULL => 'IS NOT NULL',
+            self::IN => 'IN',
+            self::NOT_IN => 'NOT IN',
+            default => throw new \RuntimeException('Invalid value'),
+        };
     }
 }

@@ -17,11 +17,9 @@ class EntityMeta
 {
     public const TYPE_FIELD = 1;
     public const TYPE_ONE_TO_MANY = 2;
-    private CacheInterface $cache;
 
-    public function __construct(CacheInterface $cache)
+    public function __construct(private readonly CacheInterface $cache)
     {
-        $this->cache = $cache;
     }
 
     public function getProperties(string $entityClass): array
@@ -39,7 +37,7 @@ class EntityMeta
     public function getPrimaryColumn(string $entityClass): string
     {
         $types = $this->getProperties($entityClass);
-        foreach ($types as $propertyName => $config) {
+        foreach ($types as $config) {
             if ($config[0] === self::TYPE_FIELD) {
                 [$fieldType, $class, $setter, $getter, $columnName, $dataType, $type, $length, $nullable, $default, $isPrimary] = $config;
                 if ($class === $entityClass && $isPrimary) {

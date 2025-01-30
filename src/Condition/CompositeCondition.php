@@ -14,16 +14,14 @@ use Artemeon\Orm\Conjunction;
  */
 class CompositeCondition implements ConditionInterface
 {
-    /**
-     * @var ConditionInterface[]
-     */
-    private array $conditions;
-    private Conjunction $conjunction;
-
-    public function __construct(array $conditions = [], Conjunction $conjunction = Conjunction::AND)
+    public function __construct(
+        /**
+         * @var ConditionInterface[]
+         */
+        private array $conditions = [],
+        private Conjunction $conjunction = Conjunction::AND
+    )
     {
-        $this->conditions = $conditions;
-        $this->conjunction = $conjunction;
     }
 
     public function getConjunction(): Conjunction

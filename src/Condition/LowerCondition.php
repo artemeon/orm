@@ -10,15 +10,8 @@ use function sprintf;
 
 class LowerCondition implements ConditionInterface
 {
-    private string $columnName;
-    private mixed $value;
-    private bool $inclusive;
-
-    public function __construct(string $columnName, mixed $value, bool $inclusive = false)
+    public function __construct(private readonly string $columnName, private readonly mixed $value, private readonly bool $inclusive = false)
     {
-        $this->columnName = $columnName;
-        $this->value = $value;
-        $this->inclusive = $inclusive;
     }
 
     public function getParams(): array

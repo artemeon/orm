@@ -8,16 +8,15 @@ use Artemeon\Orm\EntityInterface;
 use Artemeon\Orm\EntityMeta;
 use Artemeon\Orm\FieldMapper;
 use Artemeon\Orm\Tests\FieldMapper\TestModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Psr16Cache;
 
 class FieldMapperTest extends TestCase
 {
-    /**
-     * @dataProvider mapDataProvider
-     */
-    public function testMap(EntityInterface $entity, array $row, array $expects): void
+    #[DataProvider('mapDataProvider')]
+    public static function testMap(EntityInterface $entity, array $row, array $expects): void
     {
         $meta = new EntityMeta(new Psr16Cache(new ArrayAdapter()));
         $mapper = new FieldMapper($meta, new MockConnection(), new Converter());

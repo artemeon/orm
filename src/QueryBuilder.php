@@ -10,15 +10,10 @@ use Artemeon\Orm\Exception\OrmException;
  */
 class QueryBuilder
 {
-    private ConnectionInterface $connection;
-
     private array $blockedTableAlias = ['user'];
-    private EntityMeta $entityMeta;
 
-    public function __construct(ConnectionInterface $connection, EntityMeta $entityMeta)
+    public function __construct(private readonly ConnectionInterface $connection, private readonly EntityMeta $entityMeta)
     {
-        $this->connection = $connection;
-        $this->entityMeta = $entityMeta;
     }
 
     public function buildFrom(string $entityClass, ?string $joinColumn = null): string
