@@ -10,9 +10,7 @@ use function sprintf;
 
 class EmptyCondition implements ConditionInterface
 {
-    public function __construct(private readonly string $columnName, private readonly bool $negated = false)
-    {
-    }
+    public function __construct(private string $columnName, private bool $negated = false) {}
 
     public function getParams(): array
     {

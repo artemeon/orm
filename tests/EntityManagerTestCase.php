@@ -8,7 +8,6 @@ use Artemeon\Database\Connection;
 use Artemeon\Database\ConnectionInterface;
 use Artemeon\Database\ConnectionParameters;
 use Artemeon\Database\DriverFactory;
-use Artemeon\Database\Schema\DataType;
 use Artemeon\Orm\Converter;
 use Artemeon\Orm\EntityManager;
 use Artemeon\Orm\EntityMeta;
@@ -23,8 +22,11 @@ use Symfony\Component\Cache\Psr16Cache;
 abstract class EntityManagerTestCase extends TestCase
 {
     private static ?ConnectionInterface $connection = null;
+
     private static ?EntityManager $entityManager = null;
+
     private static ?SchemaManager $schemaManager = null;
+
     private static ?EntityMeta $entityMeta = null;
 
     protected function setUp(): void
@@ -49,7 +51,7 @@ abstract class EntityManagerTestCase extends TestCase
         $driver = getenv('DB_DRIVER') ?: 'sqlite3';
 
         $params = new ConnectionParameters($host, $user, $password, $database, $port, $driver);
-        $factory = new DriverFactory();
+        $factory = new DriverFactory;
 
         return self::$connection = new Connection($params, $factory);
     }
@@ -61,7 +63,7 @@ abstract class EntityManagerTestCase extends TestCase
         }
 
         $queryBuilder = new QueryBuilder($this->getConnection(), $this->getEntityMeta());
-        $converter = new Converter();
+        $converter = new Converter;
         $fieldMapper = new FieldMapper($this->getEntityMeta(), $this->getConnection(), $converter);
         $entityManager = new EntityManager($this->getConnection(), $queryBuilder, $fieldMapper, $this->getEntityMeta(), $converter);
 
@@ -81,17 +83,17 @@ abstract class EntityManagerTestCase extends TestCase
 
     protected function getEntityMeta(): EntityMeta
     {
-        return self::$entityMeta ?: self::$entityMeta = new EntityMeta(new Psr16Cache(new ArrayAdapter()));
+        return self::$entityMeta ?: self::$entityMeta = new EntityMeta(new Psr16Cache(new ArrayAdapter));
     }
 
-    protected function flushDBCache()
+    protected function flushDBCache(): void
     {
         $this->getConnection()->flushPreparedStatementsCache();
         $this->getConnection()->flushQueryCache();
         $this->getConnection()->flushTablesCache();
     }
 
-    private function setupFixture()
+    private function setupFixture(): void
     {
         $this->getConnection()->dropTable('agp_contracts_con');
         $this->getConnection()->dropTable('agp_contracts_con2foo');
@@ -103,7 +105,7 @@ abstract class EntityManagerTestCase extends TestCase
         $entityManager = $this->getEntityManager();
 
         for ($i = 1; $i <= 50; $i++) {
-            $entity = new TestModel();
+            $entity = new TestModel;
             $entity->setStrServicerId($this->generateSystemid());
             $entity->setIntInhouseService(1);
             $entity->setOutsourcingInstitution('foobar');

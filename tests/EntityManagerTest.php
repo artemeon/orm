@@ -2,7 +2,6 @@
 
 namespace Artemeon\Orm\Tests;
 
-use Artemeon\Orm\Collection;
 use Artemeon\Orm\Condition\EqualsCondition;
 use Artemeon\Orm\Tests\FieldMapper\TestModel;
 use Artemeon\Orm\Tests\FieldMapper\TestParent;
@@ -10,28 +9,28 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class EntityManagerTest extends EntityManagerTestCase
 {
-    public function testFindAll()
+    public function testFindAll(): void
     {
         $result = $this->getEntityManager()->findAll(TestModel::class);
 
-        $this->assertEquals(50, count($result));
+        $this->assertCount(50, $result);
     }
 
-    public function testFind()
+    public function testFind(): void
     {
         $result = $this->getEntityManager()->findOne(TestModel::class, [new EqualsCondition('outsourcing_i', 'foobar')]);
 
         $this->assertInstanceOf(TestModel::class, $result);
     }
 
-    public function testInsert()
+    public function testInsert(): void
     {
-        $relation = new TestParent();
+        $relation = new TestParent;
         $relation->setOwner('foobar');
-        $collection = new ArrayCollection();
+        $collection = new ArrayCollection;
         $collection->add($relation);
 
-        $entity = new TestModel();
+        $entity = new TestModel;
         $entity->setStrServicerId($this->generateSystemid());
         $entity->setIntInhouseService(1);
         $entity->setOutsourcingInstitution('foobar');
@@ -43,7 +42,7 @@ class EntityManagerTest extends EntityManagerTestCase
         $this->assertNotEmpty($entity->getContractId());
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $entity = $this->getEntityManager()->findOne(TestModel::class, [new EqualsCondition('outsourcing_i', 'foobar')]);
         $this->assertInstanceOf(TestModel::class, $entity);
@@ -59,7 +58,7 @@ class EntityManagerTest extends EntityManagerTestCase
         $this->assertNotEmpty($entity->getContractId());
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $entity = $this->getEntityManager()->findOne(TestModel::class, [new EqualsCondition('outsourcing_i', 'foobar')]);
         $this->assertInstanceOf(TestModel::class, $entity);

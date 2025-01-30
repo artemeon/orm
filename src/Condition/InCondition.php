@@ -4,6 +4,7 @@ namespace Artemeon\Orm\Condition;
 
 use Artemeon\Orm\Condition;
 use Artemeon\Orm\Exception\OrmException;
+use Override;
 
 /**
  * A orm condition may be used to create where conditions for the objectList and objectCount queries.
@@ -14,7 +15,7 @@ class InCondition extends Condition
     /**
      * @internal
      */
-    public const MAX_IN_VALUES = 950;
+    public const int MAX_IN_VALUES = 950;
 
     public function __construct(protected string $columnName, array $params, protected bool $negated = false)
     {
@@ -24,7 +25,7 @@ class InCondition extends Condition
     /**
      * @throws OrmException
      */
-    #[\Override]
+    #[Override]
     public function setParams(array $params): void
     {
         throw new OrmException('Setting params for property IN restrictions is not supported');
@@ -33,7 +34,7 @@ class InCondition extends Condition
     /**
      * @throws OrmException
      */
-    #[\Override]
+    #[Override]
     public function setWhere(string $where): void
     {
         throw new OrmException('Setting a where restriction for property IN restrictions is not supported');
@@ -42,7 +43,7 @@ class InCondition extends Condition
     /**
      * Here comes the magic, generation a where restriction out of the passed property name and the comparator
      */
-    #[\Override]
+    #[Override]
     public function getWhere(): string
     {
         return $this->getInStatement($this->columnName);
@@ -62,15 +63,15 @@ class InCondition extends Condition
 
             for ($i = 0; $i < $count; $i++) {
                 $params = array_slice($this->params, $i * self::MAX_IN_VALUES, self::MAX_IN_VALUES);
-                $paramsPlaceholder = array_map(static fn($value) => '?', $params);
+                $paramsPlaceholder = array_map(static fn (mixed $value) => '?', $params);
                 $placeholder = implode(',', $paramsPlaceholder);
-                if (!empty($placeholder)) {
+                if (! empty($placeholder)) {
                     $parts[] = "{$columnName} {$operator} ({$placeholder})";
                 }
             }
 
             if (count($parts) > 0) {
-                return '(' . implode(' OR ', $parts) . ')';
+                return '('.implode(' OR ', $parts).')';
             }
         } else {
             $placeholder = trim(str_repeat('?,', count($this->params)), ',');
@@ -80,6 +81,6 @@ class InCondition extends Condition
             }
         }
 
-        return "";
+        return '';
     }
 }

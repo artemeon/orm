@@ -10,9 +10,7 @@ use function sprintf;
 
 class IsNullCondition implements ConditionInterface
 {
-    public function __construct(private readonly string $columnName, private readonly bool $negated = false)
-    {
-    }
+    public function __construct(private readonly string $columnName, private readonly bool $negated = false) {}
 
     public function getParams(): array
     {

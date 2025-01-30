@@ -16,10 +16,10 @@ use Symfony\Component\Cache\Psr16Cache;
 class FieldMapperTest extends TestCase
 {
     #[DataProvider('mapDataProvider')]
-    public static function testMap(EntityInterface $entity, array $row, array $expects): void
+    public static function test_map(EntityInterface $entity, array $row, array $expects): void
     {
-        $meta = new EntityMeta(new Psr16Cache(new ArrayAdapter()));
-        $mapper = new FieldMapper($meta, new MockConnection(), new Converter());
+        $meta = new EntityMeta(new Psr16Cache(new ArrayAdapter));
+        $mapper = new FieldMapper($meta, new MockConnection, new Converter);
         $mapper->map($entity, $row);
 
         foreach ($expects as $getter => $expect) {
@@ -31,7 +31,7 @@ class FieldMapperTest extends TestCase
     {
         return [
             [
-                new TestModel(),
+                new TestModel,
                 [
                     'contract_id' => 'test',
                     'servicerid' => 'foo',
@@ -49,8 +49,8 @@ class FieldMapperTest extends TestCase
                     'getPurchasingRelevance' => 16,
                     'getSystemId' => 'test',
                     'getOwner' => 'owner',
-                ]
-            ]
+                ],
+            ],
         ];
     }
 }

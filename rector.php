@@ -30,7 +30,7 @@ return RectorConfig::configure()
         Rector\CodeQuality\Rector\BooleanAnd\RemoveUselessIsObjectCheckRector::class,
     ])
     ->withPaths([
-        __DIR__ . '/src',
-        __DIR__ . '/tests',
+        __DIR__.'/src',
+        __DIR__.'/tests',
     ])
     ->withTypeCoverageLevel(0);

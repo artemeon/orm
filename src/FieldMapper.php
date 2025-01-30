@@ -3,7 +3,6 @@
 namespace Artemeon\Orm;
 
 use Artemeon\Database\ConnectionInterface;
-use Artemeon\Database\Schema\DataType;
 use Artemeon\Orm\Exception\OrmException;
 
 /**
@@ -21,7 +20,7 @@ class FieldMapper
     public function map(EntityInterface $entity, array $row): void
     {
         $sourcePrimaryColumn = $this->entityMeta->getPrimaryColumn($entity::class);
-        if (!isset($row[$sourcePrimaryColumn])) {
+        if (! isset($row[$sourcePrimaryColumn])) {
             throw new OrmException('Could not find primary column in result set');
         }
 
@@ -30,7 +29,7 @@ class FieldMapper
             if ($config[0] === EntityMeta::TYPE_FIELD) {
                 [$fieldType, $class, $setter, $getter, $columnName, $dataType, $type, $length, $nullable, $default, $isPrimary] = $config;
 
-                if (!isset($row[$columnName])) {
+                if (! isset($row[$columnName])) {
                     continue;
                 }
 
@@ -46,5 +45,4 @@ class FieldMapper
             $entity->{$setter}($value);
         }
     }
-
 }

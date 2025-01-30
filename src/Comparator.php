@@ -2,6 +2,8 @@
 
 namespace Artemeon\Orm;
 
+use RuntimeException;
+
 enum Comparator
 {
     case GREATER_THEN;
@@ -34,7 +36,7 @@ enum Comparator
             self::IS_NOT_NULL => 'IS NOT NULL',
             self::IN => 'IN',
             self::NOT_IN => 'NOT IN',
-            default => throw new \RuntimeException('Invalid value'),
+            default => throw new RuntimeException('Invalid value'),
         };
     }
 }

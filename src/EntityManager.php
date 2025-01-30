@@ -9,14 +9,13 @@ use Doctrine\Common\Collections\Collection as DoctrineCollection;
 
 class EntityManager
 {
-    public function __construct(private readonly ConnectionInterface $connection, private readonly QueryBuilder $queryBuilder, private readonly FieldMapper $fieldMapper, private readonly EntityMeta $entityMeta, private readonly Converter $converter)
-    {
-    }
+    public function __construct(private readonly ConnectionInterface $connection, private readonly QueryBuilder $queryBuilder, private readonly FieldMapper $fieldMapper, private readonly EntityMeta $entityMeta, private readonly Converter $converter) {}
 
     /**
-     * @param array<ConditionInterface> $conditions
-     * @param array<OrderByInterface> $sorting
+     * @param  array<ConditionInterface>  $conditions
+     * @param  array<OrderByInterface>  $sorting
      * @return array<EntityInterface>
+     *
      * @throws Exception\OrmException
      */
     public function findAll(string $targetClass, array $conditions = [], array $sorting = []): array
@@ -26,7 +25,7 @@ class EntityManager
         $entities = [];
         $result = $this->connection->fetchAllAssociative($query, $params);
         foreach ($result as $row) {
-            $entity = new $targetClass();
+            $entity = new $targetClass;
             $this->fieldMapper->map($entity, $row);
             $entities[] = $entity;
         }
@@ -35,8 +34,9 @@ class EntityManager
     }
 
     /**
-     * @param array<ConditionInterface> $conditions
-     * @param array<OrderByInterface> $sorting
+     * @param  array<ConditionInterface>  $conditions
+     * @param  array<OrderByInterface>  $sorting
+     *
      * @throws Exception\OrmException
      */
     public function findOne(string $targetClass, array $conditions = [], array $sorting = []): ?EntityInterface
@@ -48,28 +48,30 @@ class EntityManager
             return null;
         }
 
-        $entity = new $targetClass();
+        $entity = new $targetClass;
         $this->fieldMapper->map($entity, $row);
+
         return $entity;
     }
 
     /**
-     * @param array<ConditionInterface> $conditions
+     * @param  array<ConditionInterface>  $conditions
+     *
      * @throws Exception\OrmException
      */
     public function getCount(string $targetClass, array $conditions): int
     {
         $from = $this->queryBuilder->buildFrom($targetClass);
-        $query = 'SELECT COUNT(*) AS cnt ' . $from . ' WHERE 1=1 ';
+        $query = 'SELECT COUNT(*) AS cnt '.$from.' WHERE 1=1 ';
 
         $params = [];
         foreach ($conditions as $condition) {
-            $query.= $condition->getWhere() . ' ';
+            $query .= $condition->getWhere().' ';
             $params = array_merge($params, $condition->getParams());
         }
 
         $row = $this->connection->fetchOne($query, $params);
-        if (!isset($row['cnt'])) {
+        if (! isset($row['cnt'])) {
             return 0;
         }
 
@@ -79,26 +81,26 @@ class EntityManager
     private function getQuery(string $targetClass, array $conditions = [], array $sorting = []): array
     {
         $from = $this->queryBuilder->buildFrom($targetClass);
-        $query = 'SELECT * ' . $from . ' WHERE 1=1 ';
+        $query = 'SELECT * '.$from.' WHERE 1=1 ';
 
         $params = [];
         foreach ($conditions as $condition) {
-            if (!$condition instanceof Condition) {
+            if (! $condition instanceof Condition) {
                 continue;
             }
 
-            $query.= $condition->getWhere() . ' ';
+            $query .= $condition->getWhere().' ';
             $params = array_merge($params, $condition->getParams());
         }
 
         if (count($sorting) > 0) {
-            $query.= ' ORDER BY ';
+            $query .= ' ORDER BY ';
             foreach ($sorting as $sort) {
-                if (!$sort instanceof OrderBy) {
+                if (! $sort instanceof OrderBy) {
                     continue;
                 }
 
-                $query.= $sort->getOrderBy() . ' ';
+                $query .= $sort->getOrderBy().' ';
             }
         }
 
@@ -121,7 +123,7 @@ class EntityManager
                 [$fieldType, $class, $setter, $getter, $columnName, $dataType, $type, $length, $nullable, $default, $isPrimary] = $config;
 
                 $tableName = $tableNames[$class];
-                if (!isset($data[$tableName])) {
+                if (! isset($data[$tableName])) {
                     $data[$tableName] = [];
                 }
 
@@ -164,10 +166,10 @@ class EntityManager
                 [$fieldType, $class, $setter, $getter, $columnName, $dataType, $type, $length, $nullable, $default, $isPrimary] = $config;
 
                 $tableName = $tableNames[$class];
-                if (!isset($data[$tableName])) {
+                if (! isset($data[$tableName])) {
                     $data[$tableName] = [];
                 }
-                if (!isset($identifiers[$tableName])) {
+                if (! isset($identifiers[$tableName])) {
                     $identifiers[$tableName] = [];
                 }
 
@@ -184,7 +186,7 @@ class EntityManager
         }
 
         foreach ($data as $tableName => $values) {
-            $this->connection->update($tableName, $values, $identifiers[$tableName] ?? throw new OrmException('No primary key exists for table ' . $tableName));
+            $this->connection->update($tableName, $values, $identifiers[$tableName] ?? throw new OrmException('No primary key exists for table '.$tableName));
         }
 
         $this->handleRelations($entity, $relations);
@@ -206,7 +208,7 @@ class EntityManager
                 [$fieldType, $class, $setter, $getter, $columnName, $dataType, $type, $length, $nullable, $default, $isPrimary] = $config;
 
                 $tableName = $tableNames[$class];
-                if (!isset($identifiers[$tableName])) {
+                if (! isset($identifiers[$tableName])) {
                     $identifiers[$tableName] = [];
                 }
 
@@ -242,11 +244,11 @@ class EntityManager
         $value = $entity->{$getter}();
 
         if ($value === null) {
-            $value = new ArrayCollection();
+            $value = new ArrayCollection;
         }
 
-        if (!$value instanceof DoctrineCollection) {
-            throw new OrmException('Provided one to many property must return a ' . DoctrineCollection::class);
+        if (! $value instanceof DoctrineCollection) {
+            throw new OrmException('Provided one to many property must return a '.DoctrineCollection::class);
         }
 
         return [$value, $relationTable, $sourceColumn, $targetColumn, $types];
