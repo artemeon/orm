@@ -14,8 +14,15 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Collection extends AbstractLazyCollection
 {
-    public function __construct(private readonly string $relationTable, private readonly string $sourceColumn, private array $type, private readonly string $primaryValue, private readonly ConnectionInterface $connection, private readonly FieldMapper $mapper, private readonly QueryBuilder $queryBuilder)
-    {
+    public function __construct(
+        private readonly string $relationTable,
+        private readonly string $sourceColumn,
+        private array $type,
+        private readonly string $primaryValue,
+        private readonly ConnectionInterface $connection,
+        private readonly FieldMapper $mapper,
+        private readonly QueryBuilder $queryBuilder,
+    ) {
     }
 
     protected function doInitialize(): void
