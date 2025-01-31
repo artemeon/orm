@@ -14,20 +14,22 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Collection extends AbstractLazyCollection
 {
-    public function __construct(private readonly string $relationTable, private readonly string $sourceColumn, private array $type, private readonly string $primaryValue, private readonly ConnectionInterface $connection, private readonly FieldMapper $mapper, private readonly QueryBuilder $queryBuilder) {}
+    public function __construct(private readonly string $relationTable, private readonly string $sourceColumn, private array $type, private readonly string $primaryValue, private readonly ConnectionInterface $connection, private readonly FieldMapper $mapper, private readonly QueryBuilder $queryBuilder)
+    {
+    }
 
     protected function doInitialize(): void
     {
-        $this->collection = new ArrayCollection;
+        $this->collection = new ArrayCollection();
 
-        $from = $this->queryBuilder->buildFrom($this->type[0], 'rel.'.$this->sourceColumn);
-        $query = 'SELECT * FROM '.$this->relationTable.' AS rel '.$from.' WHERE rel.'.$this->sourceColumn.' = ?';
+        $from = $this->queryBuilder->buildFrom($this->type[0], 'rel.' . $this->sourceColumn);
+        $query = 'SELECT * FROM ' . $this->relationTable . ' AS rel ' . $from . ' WHERE rel.' . $this->sourceColumn . ' = ?';
 
         $result = $this->connection->fetchAllAssociative($query, [$this->primaryValue]);
         $entityClass = $this->type[0];
 
         foreach ($result as $row) {
-            $entity = new $entityClass;
+            $entity = new $entityClass();
             $this->mapper->map($entity, $row);
 
             $this->collection->add($entity);

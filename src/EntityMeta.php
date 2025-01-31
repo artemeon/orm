@@ -14,7 +14,7 @@ use ReflectionNamedType;
 use ReflectionProperty;
 
 /**
- * The field mapper is a basic service which reads all annotations from a model and maps the values from a row to the model
+ * The field mapper is a basic service which reads all annotations from a model and maps the values from a row to the model.
  */
 class EntityMeta
 {
@@ -22,19 +22,20 @@ class EntityMeta
 
     public const int TYPE_ONE_TO_MANY = 2;
 
-    public function __construct(private readonly CacheInterface $cache) {}
+    public function __construct(private readonly CacheInterface $cache)
+    {
+    }
 
     public function getProperties(string $entityClass): array
     {
-        $cacheKey = 'entity-meta-properties-'.str_replace('\\', '-', $entityClass);
+        $cacheKey = 'entity-meta-properties-' . str_replace('\\', '-', $entityClass);
         if ($this->cache->has($cacheKey)) {
             return $this->cache->get($cacheKey);
-        } else {
-            $types = $this->getTypesFromEntity($entityClass);
-            $this->cache->set($cacheKey, $types);
-
-            return $types;
         }
+        $types = $this->getTypesFromEntity($entityClass);
+        $this->cache->set($cacheKey, $types);
+
+        return $types;
     }
 
     public function getPrimaryColumn(string $entityClass): string
@@ -49,7 +50,7 @@ class EntityMeta
             }
         }
 
-        throw new OrmException('Could not find primary column for entity '.$entityClass.' maybe you have forgotten to add a TablePrimary attribute?');
+        throw new OrmException('Could not find primary column for entity ' . $entityClass . ' maybe you have forgotten to add a TablePrimary attribute?');
     }
 
     public function getPrimaryId(EntityInterface $entity): ?string
@@ -70,15 +71,14 @@ class EntityMeta
 
     public function getTableNames(string $entityClass): array
     {
-        $cacheKey = 'entity-meta-table-names-'.str_replace('\\', '-', $entityClass);
+        $cacheKey = 'entity-meta-table-names-' . str_replace('\\', '-', $entityClass);
         if ($this->cache->has($cacheKey)) {
             return $this->cache->get($cacheKey);
-        } else {
-            $types = $this->getTableNamesFromEntity($entityClass);
-            $this->cache->set($cacheKey, $types);
-
-            return $types;
         }
+        $types = $this->getTableNamesFromEntity($entityClass);
+        $this->cache->set($cacheKey, $types);
+
+        return $types;
     }
 
     private function getTableNamesFromEntity(string $entityClass): array
@@ -184,7 +184,7 @@ class EntityMeta
         return null;
     }
 
-    private function getTypeForProperty(ReflectionProperty $property, DataType $dataType): string|DataType
+    private function getTypeForProperty(ReflectionProperty $property, DataType $dataType): DataType | string
     {
         $type = $this->getTypeHintForProperty($property);
         if ($type !== null) {
@@ -210,20 +210,21 @@ class EntityMeta
 
         $arrSetters = [
             $propertyName,
-            'set'.$propertyName,
-            'setStr'.$propertyName,
-            'setInt'.$propertyName,
-            'setFloat'.$propertyName,
-            'setBit'.$propertyName,
-            'setObj'.$propertyName,
-            'setArr'.$propertyName,
-            'setLong'.$propertyName,
-            'with'.$propertyName,
+            'set' . $propertyName,
+            'setStr' . $propertyName,
+            'setInt' . $propertyName,
+            'setFloat' . $propertyName,
+            'setBit' . $propertyName,
+            'setObj' . $propertyName,
+            'setArr' . $propertyName,
+            'setLong' . $propertyName,
+            'with' . $propertyName,
         ];
 
         foreach ($arrSetters as $strOneSetter) {
             if ($class->hasMethod($strOneSetter)) {
                 $setter = $strOneSetter;
+
                 break;
             }
         }
@@ -236,16 +237,16 @@ class EntityMeta
         $getter = null;
 
         $arrGetters = [
-            'get'.$propertyName,
-            'getStr'.$propertyName,
-            'getInt'.$propertyName,
-            'getFloat'.$propertyName,
-            'getBit'.$propertyName,
-            'getObj'.$propertyName,
-            'getArr'.$propertyName,
-            'getLong'.$propertyName,
-            'is'.$propertyName,
-            'should'.$propertyName,
+            'get' . $propertyName,
+            'getStr' . $propertyName,
+            'getInt' . $propertyName,
+            'getFloat' . $propertyName,
+            'getBit' . $propertyName,
+            'getObj' . $propertyName,
+            'getArr' . $propertyName,
+            'getLong' . $propertyName,
+            'is' . $propertyName,
+            'should' . $propertyName,
         ];
 
         foreach ($arrGetters as $strOneGetter) {

@@ -8,7 +8,9 @@ use Artemeon\Orm\Exception\OrmException;
 
 class SchemaManager
 {
-    public function __construct(private readonly ConnectionInterface $connection, private readonly EntityMeta $entityMeta) {}
+    public function __construct(private readonly ConnectionInterface $connection, private readonly EntityMeta $entityMeta)
+    {
+    }
 
     public function createTable(string $entityClass): void
     {

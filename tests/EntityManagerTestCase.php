@@ -51,7 +51,7 @@ abstract class EntityManagerTestCase extends TestCase
         $driver = getenv('DB_DRIVER') ?: 'sqlite3';
 
         $params = new ConnectionParameters($host, $user, $password, $database, $port, $driver);
-        $factory = new DriverFactory;
+        $factory = new DriverFactory();
 
         return self::$connection = new Connection($params, $factory);
     }
@@ -63,7 +63,7 @@ abstract class EntityManagerTestCase extends TestCase
         }
 
         $queryBuilder = new QueryBuilder($this->getConnection(), $this->getEntityMeta());
-        $converter = new Converter;
+        $converter = new Converter();
         $fieldMapper = new FieldMapper($this->getEntityMeta(), $this->getConnection(), $converter);
         $entityManager = new EntityManager($this->getConnection(), $queryBuilder, $fieldMapper, $this->getEntityMeta(), $converter);
 
@@ -83,7 +83,7 @@ abstract class EntityManagerTestCase extends TestCase
 
     protected function getEntityMeta(): EntityMeta
     {
-        return self::$entityMeta ?: self::$entityMeta = new EntityMeta(new Psr16Cache(new ArrayAdapter));
+        return self::$entityMeta ?: self::$entityMeta = new EntityMeta(new Psr16Cache(new ArrayAdapter()));
     }
 
     protected function flushDBCache(): void
@@ -105,7 +105,7 @@ abstract class EntityManagerTestCase extends TestCase
         $entityManager = $this->getEntityManager();
 
         for ($i = 1; $i <= 50; $i++) {
-            $entity = new TestModel;
+            $entity = new TestModel();
             $entity->setStrServicerId($this->generateSystemid());
             $entity->setIntInhouseService(1);
             $entity->setOutsourcingInstitution('foobar');

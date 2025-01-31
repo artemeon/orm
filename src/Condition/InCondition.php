@@ -8,7 +8,7 @@ use Override;
 
 /**
  * A orm condition may be used to create where conditions for the objectList and objectCount queries.
- * This condition creates an IN statement e.g. "AND <columnname> IN (<parameters>)"
+ * This condition creates an IN statement e.g. "AND <columnname> IN (<parameters>)".
  */
 class InCondition extends Condition
 {
@@ -41,7 +41,7 @@ class InCondition extends Condition
     }
 
     /**
-     * Here comes the magic, generation a where restriction out of the passed property name and the comparator
+     * Here comes the magic, generation a where restriction out of the passed property name and the comparator.
      */
     #[Override]
     public function getWhere(): string
@@ -71,7 +71,7 @@ class InCondition extends Condition
             }
 
             if (count($parts) > 0) {
-                return '('.implode(' OR ', $parts).')';
+                return '(' . implode(' OR ', $parts) . ')';
             }
         } else {
             $placeholder = trim(str_repeat('?,', count($this->params)), ',');

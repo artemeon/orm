@@ -10,12 +10,15 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Psr16Cache;
 
+/**
+ * @internal
+ */
 class QueryBuilderTest extends TestCase
 {
-    public function test_build_from()
+    public function testBuildFrom(): void
     {
-        $connection = new MockConnection;
-        $entityMeta = new EntityMeta(new Psr16Cache(new ArrayAdapter));
+        $connection = new MockConnection();
+        $entityMeta = new EntityMeta(new Psr16Cache(new ArrayAdapter()));
         $queryBuilder = new QueryBuilder($connection, $entityMeta);
 
         $actual = $queryBuilder->buildFrom(TestModel::class);

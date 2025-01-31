@@ -10,7 +10,7 @@ use Artemeon\Orm\Conjunction;
  * They will connect via given condition connect.
  * e.g.
  *  ( (<restriction_1>) AND (<restriction_2>) AND (<restriction_3>) )
- *  ( (<restriction_1>) OR (<restriction_2>) OR (<restriction_3>) )
+ *  ( (<restriction_1>) OR (<restriction_2>) OR (<restriction_3>) ).
  */
 class CompositeCondition implements ConditionInterface
 {
@@ -19,8 +19,9 @@ class CompositeCondition implements ConditionInterface
          * @var ConditionInterface[]
          */
         private array $conditions = [],
-        private Conjunction $conjunction = Conjunction::AND
-    ) {}
+        private Conjunction $conjunction = Conjunction::AND,
+    ) {
+    }
 
     public function getConjunction(): Conjunction
     {
@@ -58,11 +59,11 @@ class CompositeCondition implements ConditionInterface
 
         $result = '';
         if (count($where) > 0) {
-            $result = implode(') '.$this->conjunction->toSql().' (', $where);
+            $result = implode(') ' . $this->conjunction->toSql() . ' (', $where);
             if (count($where) == 1) {
-                $result = '('.$result.')';
+                $result = '(' . $result . ')';
             } else {
-                $result = '( ('.$result.') )';
+                $result = '( (' . $result . ') )';
             }
         }
 

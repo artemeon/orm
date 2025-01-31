@@ -7,30 +7,33 @@ use Artemeon\Orm\Tests\FieldMapper\TestModel;
 use Artemeon\Orm\Tests\FieldMapper\TestParent;
 use Doctrine\Common\Collections\ArrayCollection;
 
+/**
+ * @internal
+ */
 class EntityManagerTest extends EntityManagerTestCase
 {
-    public function test_find_all(): void
+    public function testFindAll(): void
     {
         $result = $this->getEntityManager()->findAll(TestModel::class);
 
         $this->assertCount(50, $result);
     }
 
-    public function test_find(): void
+    public function testFind(): void
     {
         $result = $this->getEntityManager()->findOne(TestModel::class, [new EqualsCondition('outsourcing_i', 'foobar')]);
 
         $this->assertInstanceOf(TestModel::class, $result);
     }
 
-    public function test_insert(): void
+    public function testInsert(): void
     {
-        $relation = new TestParent;
+        $relation = new TestParent();
         $relation->setOwner('foobar');
-        $collection = new ArrayCollection;
+        $collection = new ArrayCollection();
         $collection->add($relation);
 
-        $entity = new TestModel;
+        $entity = new TestModel();
         $entity->setStrServicerId($this->generateSystemid());
         $entity->setIntInhouseService(1);
         $entity->setOutsourcingInstitution('foobar');
@@ -42,7 +45,7 @@ class EntityManagerTest extends EntityManagerTestCase
         $this->assertNotEmpty($entity->getContractId());
     }
 
-    public function test_update(): void
+    public function testUpdate(): void
     {
         $entity = $this->getEntityManager()->findOne(TestModel::class, [new EqualsCondition('outsourcing_i', 'foobar')]);
         $this->assertInstanceOf(TestModel::class, $entity);
@@ -58,7 +61,7 @@ class EntityManagerTest extends EntityManagerTestCase
         $this->assertNotEmpty($entity->getContractId());
     }
 
-    public function test_delete(): void
+    public function testDelete(): void
     {
         $entity = $this->getEntityManager()->findOne(TestModel::class, [new EqualsCondition('outsourcing_i', 'foobar')]);
         $this->assertInstanceOf(TestModel::class, $entity);

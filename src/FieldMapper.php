@@ -6,7 +6,7 @@ use Artemeon\Database\ConnectionInterface;
 use Artemeon\Orm\Exception\OrmException;
 
 /**
- * The field mapper is a basic service which reads all annotations from a model and maps the values from a row to the model
+ * The field mapper is a basic service which reads all annotations from a model and maps the values from a row to the model.
  */
 class FieldMapper
 {

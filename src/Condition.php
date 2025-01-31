@@ -57,23 +57,23 @@ class Condition implements ConditionInterface
     {
         if (is_string($value)) {
             if ($comparator === null || $comparator === Comparator::LIKE) {
-                return new LikeCondition($tableColumn, '%'.$value.'%');
-            } else {
-                return new Condition($tableColumn.' '.$comparator->toSql().' ?', [$value]);
+                return new LikeCondition($tableColumn, '%' . $value . '%');
             }
+
+            return new Condition($tableColumn . ' ' . $comparator->toSql() . ' ?', [$value]);
         } elseif (is_int($value) || is_float($value)) {
             if ($comparator === null || $comparator === Comparator::EQUAL) {
                 return new EqualsCondition($tableColumn, $value);
-            } else {
-                return new Condition($tableColumn.' '.$comparator->toSql().' ?', [$value]);
             }
+
+            return new Condition($tableColumn . ' ' . $comparator->toSql() . ' ?', [$value]);
         } elseif (is_bool($value)) {
             if ($comparator === null || $comparator === Comparator::EQUAL) {
                 return new EqualsCondition($tableColumn, $value ? 1 : 0);
-            } else {
-                return new Condition($tableColumn.' '.$comparator->toSql().' ?', [$value]);
             }
-        } elseif (is_null($value)) {
+
+            return new Condition($tableColumn . ' ' . $comparator->toSql() . ' ?', [$value]);
+        } elseif (null === $value) {
             return new IsNullCondition($tableColumn, $comparator === Comparator::IS_NOT_NULL);
         } elseif (is_array($value)) {
             if ($comparator === Comparator::IN_OR_EMPTY) {
