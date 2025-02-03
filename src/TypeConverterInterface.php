@@ -3,7 +3,7 @@
 namespace Artemeon\Orm;
 
 /**
- * Converter to resolve a specific value to a PHP or database type
+ * Converter to resolve a specific value to a PHP or database type.
  */
 interface TypeConverterInterface
 {

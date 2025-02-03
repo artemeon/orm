@@ -4,7 +4,7 @@ namespace Artemeon\Orm;
 
 /**
  * Represents an arbitrary condition. Has methods to return a prepared SQL condition and the fitting
- * parameters
+ * parameters.
  */
 interface ConditionInterface
 {

@@ -10,15 +10,8 @@ use function sprintf;
 
 class LikeCondition implements ConditionInterface
 {
-    private string $columnName;
-    private mixed $value;
-    private bool $negated;
-
-    public function __construct(string $columnName, mixed $value, bool $negated = false)
+    public function __construct(private readonly string $columnName, private readonly mixed $value, private readonly bool $negated = false)
     {
-        $this->columnName = $columnName;
-        $this->value = $value;
-        $this->negated = $negated;
     }
 
     public function getParams(): array
@@ -30,8 +23,8 @@ class LikeCondition implements ConditionInterface
     {
         if ($this->negated) {
             return sprintf('%s NOT LIKE ?', $this->columnName);
-        } else {
-            return sprintf('%s LIKE ?', $this->columnName);
         }
+
+        return sprintf('%s LIKE ?', $this->columnName);
     }
 }

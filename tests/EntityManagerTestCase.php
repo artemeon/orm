@@ -8,7 +8,6 @@ use Artemeon\Database\Connection;
 use Artemeon\Database\ConnectionInterface;
 use Artemeon\Database\ConnectionParameters;
 use Artemeon\Database\DriverFactory;
-use Artemeon\Database\Schema\DataType;
 use Artemeon\Orm\Converter;
 use Artemeon\Orm\EntityManager;
 use Artemeon\Orm\EntityMeta;
@@ -23,8 +22,11 @@ use Symfony\Component\Cache\Psr16Cache;
 abstract class EntityManagerTestCase extends TestCase
 {
     private static ?ConnectionInterface $connection = null;
+
     private static ?EntityManager $entityManager = null;
+
     private static ?SchemaManager $schemaManager = null;
+
     private static ?EntityMeta $entityMeta = null;
 
     protected function setUp(): void
@@ -37,7 +39,7 @@ abstract class EntityManagerTestCase extends TestCase
 
     protected function getConnection(): ConnectionInterface
     {
-        if (self::$connection) {
+        if (self::$connection !== null) {
             return self::$connection;
         }
 
@@ -56,7 +58,7 @@ abstract class EntityManagerTestCase extends TestCase
 
     protected function getEntityManager(): EntityManager
     {
-        if (self::$entityManager) {
+        if (self::$entityManager !== null) {
             return self::$entityManager;
         }
 
@@ -70,7 +72,7 @@ abstract class EntityManagerTestCase extends TestCase
 
     protected function getSchemaManager(): SchemaManager
     {
-        if (self::$schemaManager) {
+        if (self::$schemaManager !== null) {
             return self::$schemaManager;
         }
 
@@ -84,14 +86,14 @@ abstract class EntityManagerTestCase extends TestCase
         return self::$entityMeta ?: self::$entityMeta = new EntityMeta(new Psr16Cache(new ArrayAdapter()));
     }
 
-    protected function flushDBCache()
+    protected function flushDBCache(): void
     {
         $this->getConnection()->flushPreparedStatementsCache();
         $this->getConnection()->flushQueryCache();
         $this->getConnection()->flushTablesCache();
     }
 
-    private function setupFixture()
+    private function setupFixture(): void
     {
         $this->getConnection()->dropTable('agp_contracts_con');
         $this->getConnection()->dropTable('agp_contracts_con2foo');

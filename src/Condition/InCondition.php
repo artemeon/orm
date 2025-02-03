@@ -4,32 +4,28 @@ namespace Artemeon\Orm\Condition;
 
 use Artemeon\Orm\Condition;
 use Artemeon\Orm\Exception\OrmException;
+use Override;
 
 /**
  * A orm condition may be used to create where conditions for the objectList and objectCount queries.
- * This condition creates an IN statement e.g. "AND <columnname> IN (<parameters>)"
+ * This condition creates an IN statement e.g. "AND <columnname> IN (<parameters>)".
  */
 class InCondition extends Condition
 {
     /**
      * @internal
      */
-    public const MAX_IN_VALUES = 950;
+    public const int MAX_IN_VALUES = 950;
 
-    protected string $columnName;
-    protected bool $negated;
-
-    public function __construct(string $columnName, array $params, bool $negated = false)
+    public function __construct(protected string $columnName, array $params, protected bool $negated = false)
     {
         parent::__construct('', $params);
-
-        $this->columnName = $columnName;
-        $this->negated = $negated;
     }
 
     /**
      * @throws OrmException
      */
+    #[Override]
     public function setParams(array $params): void
     {
         throw new OrmException('Setting params for property IN restrictions is not supported');
@@ -38,14 +34,16 @@ class InCondition extends Condition
     /**
      * @throws OrmException
      */
+    #[Override]
     public function setWhere(string $where): void
     {
         throw new OrmException('Setting a where restriction for property IN restrictions is not supported');
     }
 
     /**
-     * Here comes the magic, generation a where restriction out of the passed property name and the comparator
+     * Here comes the magic, generation a where restriction out of the passed property name and the comparator.
      */
+    #[Override]
     public function getWhere(): string
     {
         return $this->getInStatement($this->columnName);
@@ -65,11 +63,9 @@ class InCondition extends Condition
 
             for ($i = 0; $i < $count; $i++) {
                 $params = array_slice($this->params, $i * self::MAX_IN_VALUES, self::MAX_IN_VALUES);
-                $paramsPlaceholder = array_map(function ($value) {
-                    return '?';
-                }, $params);
+                $paramsPlaceholder = array_map(static fn (mixed $value) => '?', $params);
                 $placeholder = implode(',', $paramsPlaceholder);
-                if (!empty($placeholder)) {
+                if (! empty($placeholder)) {
                     $parts[] = "{$columnName} {$operator} ({$placeholder})";
                 }
             }
@@ -80,11 +76,11 @@ class InCondition extends Condition
         } else {
             $placeholder = trim(str_repeat('?,', count($this->params)), ',');
 
-            if ($placeholder) {
+            if ($placeholder !== '' && $placeholder !== '0') {
                 return "{$columnName} {$operator} ({$placeholder})";
             }
         }
 
-        return "";
+        return '';
     }
 }

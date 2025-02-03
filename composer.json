@@ -4,7 +4,12 @@
     "type": "library",
     "description": "",
     "scripts": {
-        "phpstan": "php ./vendor/bin/phpstan analyse --memory-limit=4G"
+        "phpstan": "php ./vendor/bin/phpstan analyse --memory-limit=4G",
+        "pint": "./vendor/bin/pint --test -v",
+        "pint:fix": "./vendor/bin/pint",
+        "test": "./vendor/bin/pest",
+        "test:coverage": "XDEBUG_MODE=coverage ./vendor/bin/pest --coverage --min=63.2",
+        "test:type-coverage": "XDEBUG_MODE=coverage ./vendor/bin/pest --type-coverage --min=99.8"
     },
     "authors": [
         {
@@ -23,19 +28,24 @@
         }
     },
     "require": {
-        "artemeon/database": "^3.1",
-        "psr/simple-cache": "^3.0",
-        "doctrine/collections": "^2.0"
+        "artemeon/database": "^4.0.x-dev",
+        "doctrine/collections": "^2.0",
+        "php": ">=8.4",
+        "psr/simple-cache": "^3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.0",
-        "symfony/cache": "^6.0",
-        "phpstan/phpstan": "^1.10.59",
+        "laravel/pint": "^1.20.0",
+        "pestphp/pest": "^v3.7",
+        "pestphp/pest-plugin-type-coverage": "^3.2",
         "phpstan/extension-installer": "^1.3",
-        "phpstan/phpstan-phpunit": "^1.3"
+        "phpstan/phpstan": "^2.1.2",
+        "phpstan/phpstan-mockery": "^2.0.0",
+        "rector/rector": "^2.0.7",
+        "symfony/cache": "^6.0"
     },
     "config": {
         "allow-plugins": {
+            "pestphp/pest-plugin": true,
             "phpstan/extension-installer": true
         }
     }

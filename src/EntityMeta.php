@@ -9,19 +9,21 @@ use Artemeon\Orm\Attribute\TableName;
 use Artemeon\Orm\Attribute\TablePrimary;
 use Artemeon\Orm\Exception\OrmException;
 use Psr\SimpleCache\CacheInterface;
+use ReflectionClass;
+use ReflectionNamedType;
+use ReflectionProperty;
 
 /**
- * The field mapper is a basic service which reads all annotations from a model and maps the values from a row to the model
+ * The field mapper is a basic service which reads all annotations from a model and maps the values from a row to the model.
  */
 class EntityMeta
 {
-    public const TYPE_FIELD = 1;
-    public const TYPE_ONE_TO_MANY = 2;
-    private CacheInterface $cache;
+    public const int TYPE_FIELD = 1;
 
-    public function __construct(CacheInterface $cache)
+    public const int TYPE_ONE_TO_MANY = 2;
+
+    public function __construct(private readonly CacheInterface $cache)
     {
-        $this->cache = $cache;
     }
 
     public function getProperties(string $entityClass): array
@@ -29,17 +31,17 @@ class EntityMeta
         $cacheKey = 'entity-meta-properties-' . str_replace('\\', '-', $entityClass);
         if ($this->cache->has($cacheKey)) {
             return $this->cache->get($cacheKey);
-        } else {
-            $types = $this->getTypesFromEntity($entityClass);
-            $this->cache->set($cacheKey, $types);
-            return $types;
         }
+        $types = $this->getTypesFromEntity($entityClass);
+        $this->cache->set($cacheKey, $types);
+
+        return $types;
     }
 
     public function getPrimaryColumn(string $entityClass): string
     {
         $types = $this->getProperties($entityClass);
-        foreach ($types as $propertyName => $config) {
+        foreach ($types as $config) {
             if ($config[0] === self::TYPE_FIELD) {
                 [$fieldType, $class, $setter, $getter, $columnName, $dataType, $type, $length, $nullable, $default, $isPrimary] = $config;
                 if ($class === $entityClass && $isPrimary) {
@@ -72,16 +74,16 @@ class EntityMeta
         $cacheKey = 'entity-meta-table-names-' . str_replace('\\', '-', $entityClass);
         if ($this->cache->has($cacheKey)) {
             return $this->cache->get($cacheKey);
-        } else {
-            $types = $this->getTableNamesFromEntity($entityClass);
-            $this->cache->set($cacheKey, $types);
-            return $types;
         }
+        $types = $this->getTableNamesFromEntity($entityClass);
+        $this->cache->set($cacheKey, $types);
+
+        return $types;
     }
 
     private function getTableNamesFromEntity(string $entityClass): array
     {
-        $class = new \ReflectionClass($entityClass);
+        $class = new ReflectionClass($entityClass);
 
         $result = [];
         $tableName = $this->findTableNameAttribute($class);
@@ -101,9 +103,9 @@ class EntityMeta
 
     private function getTypesFromEntity(string $entityClass): array
     {
-        $class = new \ReflectionClass($entityClass);
+        $class = new ReflectionClass($entityClass);
 
-        if ($class->getParentClass() instanceof \ReflectionClass) {
+        if ($class->getParentClass() instanceof ReflectionClass) {
             $result = $this->getTypesFromEntity($class->getParentClass()->getName());
         } else {
             $result = [];
@@ -133,6 +135,7 @@ class EntityMeta
                 }
 
                 $result[$property->getName()] = [self::TYPE_FIELD, $class->getName(), $setter, $getter, $columnName, $dataType, $tableColumn->type, $tableColumn->length, $tableColumn->nullable, $tableColumn->default, $tableColumn instanceof TablePrimary];
+
                 continue;
             }
 
@@ -145,7 +148,7 @@ class EntityMeta
         return $result;
     }
 
-    private function findTableColumnAttribute(\ReflectionProperty $property): ?TableColumn
+    private function findTableColumnAttribute(ReflectionProperty $property): ?TableColumn
     {
         foreach ($property->getAttributes() as $attribute) {
             $tableColumn = $attribute->newInstance();
@@ -157,7 +160,7 @@ class EntityMeta
         return null;
     }
 
-    private function findTableNameAttribute(\ReflectionClass $class): ?TableName
+    private function findTableNameAttribute(ReflectionClass $class): ?TableName
     {
         foreach ($class->getAttributes() as $attribute) {
             $tableColumn = $attribute->newInstance();
@@ -169,7 +172,7 @@ class EntityMeta
         return null;
     }
 
-    private function findOneToManyAttribute(\ReflectionProperty $property): ?OneToMany
+    private function findOneToManyAttribute(ReflectionProperty $property): ?OneToMany
     {
         foreach ($property->getAttributes() as $attribute) {
             $tableColumn = $attribute->newInstance();
@@ -181,7 +184,7 @@ class EntityMeta
         return null;
     }
 
-    private function getTypeForProperty(\ReflectionProperty $property, DataType $dataType): string|DataType
+    private function getTypeForProperty(ReflectionProperty $property, DataType $dataType): DataType | string
     {
         $type = $this->getTypeHintForProperty($property);
         if ($type !== null) {
@@ -191,17 +194,17 @@ class EntityMeta
         return $dataType;
     }
 
-    private function getTypeHintForProperty(\ReflectionProperty $property): ?string
+    private function getTypeHintForProperty(ReflectionProperty $property): ?string
     {
         $type = $property->getType();
-        if (!$type instanceof \ReflectionNamedType) {
+        if (! $type instanceof ReflectionNamedType) {
             return null;
         }
 
         return $type->getName();
     }
 
-    private function getSetter(\ReflectionClass $class, string $propertyName): ?string
+    private function getSetter(ReflectionClass $class, string $propertyName): ?string
     {
         $setter = null;
 
@@ -221,6 +224,7 @@ class EntityMeta
         foreach ($arrSetters as $strOneSetter) {
             if ($class->hasMethod($strOneSetter)) {
                 $setter = $strOneSetter;
+
                 break;
             }
         }
@@ -228,7 +232,7 @@ class EntityMeta
         return $setter;
     }
 
-    private function getGetter(\ReflectionClass $class, string $propertyName): ?string
+    private function getGetter(ReflectionClass $class, string $propertyName): ?string
     {
         $getter = null;
 

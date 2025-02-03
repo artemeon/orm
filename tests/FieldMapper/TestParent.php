@@ -37,4 +37,3 @@ class TestParent implements EntityInterface
         $this->owner = $owner;
     }
 }
-

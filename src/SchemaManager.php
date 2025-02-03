@@ -8,13 +8,8 @@ use Artemeon\Orm\Exception\OrmException;
 
 class SchemaManager
 {
-    private ConnectionInterface $connection;
-    private EntityMeta $entityMeta;
-
-    public function __construct(ConnectionInterface $connection, EntityMeta $entityMeta)
+    public function __construct(private readonly ConnectionInterface $connection, private readonly EntityMeta $entityMeta)
     {
-        $this->connection = $connection;
-        $this->entityMeta = $entityMeta;
     }
 
     public function createTable(string $entityClass): void
@@ -54,7 +49,7 @@ class SchemaManager
                 $fields[$columnName] = [
                     $type,
                     $nullable,
-                    $default
+                    $default,
                 ];
             } elseif ($config[0] === EntityMeta::TYPE_ONE_TO_MANY) {
                 [$type, $class, $setter, $getter, $relationTable, $sourceColumn, $targetColumn, $types] = $config;

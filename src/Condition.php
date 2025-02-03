@@ -15,7 +15,8 @@ use Artemeon\Orm\Condition\LikeCondition;
  */
 class Condition implements ConditionInterface
 {
-    protected string $where = "";
+    protected string $where = '';
+
     protected array $params = [];
 
     public function __construct(string $where, array $params = [])
@@ -57,22 +58,22 @@ class Condition implements ConditionInterface
         if (is_string($value)) {
             if ($comparator === null || $comparator === Comparator::LIKE) {
                 return new LikeCondition($tableColumn, '%' . $value . '%');
-            } else {
-                return new Condition($tableColumn . ' ' . $comparator->toSql() . ' ?', [$value]);
             }
+
+            return new Condition($tableColumn . ' ' . $comparator->toSql() . ' ?', [$value]);
         } elseif (is_int($value) || is_float($value)) {
             if ($comparator === null || $comparator === Comparator::EQUAL) {
                 return new EqualsCondition($tableColumn, $value);
-            } else {
-                return new Condition($tableColumn . ' ' . $comparator->toSql() . ' ?', [$value]);
             }
+
+            return new Condition($tableColumn . ' ' . $comparator->toSql() . ' ?', [$value]);
         } elseif (is_bool($value)) {
             if ($comparator === null || $comparator === Comparator::EQUAL) {
                 return new EqualsCondition($tableColumn, $value ? 1 : 0);
-            } else {
-                return new Condition($tableColumn . ' ' . $comparator->toSql() . ' ?', [$value]);
             }
-        } elseif (is_null($value)) {
+
+            return new Condition($tableColumn . ' ' . $comparator->toSql() . ' ?', [$value]);
+        } elseif (null === $value) {
             return new IsNullCondition($tableColumn, $comparator === Comparator::IS_NOT_NULL);
         } elseif (is_array($value)) {
             if ($comparator === Comparator::IN_OR_EMPTY) {
@@ -80,6 +81,7 @@ class Condition implements ConditionInterface
             } elseif ($comparator === Comparator::NOT_IN_OR_EMPTY) {
                 return new CompositeCondition([new InCondition($tableColumn, $value, true), new EmptyCondition($tableColumn)], Conjunction::OR);
             }
+
             return new InCondition($tableColumn, $value);
         }
 

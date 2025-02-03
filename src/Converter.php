@@ -16,7 +16,7 @@ class Converter
         $this->converters[$type] = $converter;
     }
 
-    public function toPHPType(mixed $value, string|DataType $type): mixed
+    public function toPHPType(mixed $value, DataType | string $type): mixed
     {
         return match ($type) {
             'string', DataType::CHAR10, DataType::CHAR20, DataType::CHAR100, DataType::CHAR254, DataType::CHAR500, DataType::TEXT, DataType::LONGTEXT, DataType::BIGINT => (string) $value,
@@ -27,7 +27,7 @@ class Converter
         };
     }
 
-    public function toDatabaseType(mixed $value, string|DataType $type): mixed
+    public function toDatabaseType(mixed $value, DataType | string $type): mixed
     {
         return match ($type) {
             'string', DataType::CHAR10, DataType::CHAR20, DataType::CHAR100, DataType::CHAR254, DataType::CHAR500, DataType::TEXT, DataType::LONGTEXT, DataType::BIGINT => (string) $value,
