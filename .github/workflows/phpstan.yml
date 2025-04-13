@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
     branches:
-      - main
+      - 1.x
 jobs:
   phpstan:
-    uses: artemeon/.shared/.github/workflows/phpstan.yml@main
+    uses: artemeon/.shared/.github/workflows/phpstan-php84-upwards.yml@main

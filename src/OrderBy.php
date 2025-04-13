@@ -14,7 +14,7 @@ class OrderBy implements OrderByInterface
 
     public function __construct(string $orderBy)
     {
-        $this->orderBy = " ".$orderBy." ";
+        $this->orderBy = ' ' . $orderBy . ' ';
     }
 
     public function setOrderBy(string $orderBy): void

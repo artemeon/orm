@@ -10,13 +10,8 @@ use function sprintf;
 
 class IsNullCondition implements ConditionInterface
 {
-    private string $columnName;
-    private bool $negated;
-
-    public function __construct(string $columnName, bool $negated = false)
+    public function __construct(private readonly string $columnName, private readonly bool $negated = false)
     {
-        $this->columnName = $columnName;
-        $this->negated = $negated;
     }
 
     public function getParams(): array
@@ -28,8 +23,8 @@ class IsNullCondition implements ConditionInterface
     {
         if ($this->negated) {
             return sprintf('%s IS NOT NULL', $this->columnName);
-        } else {
-            return sprintf('%s IS NULL', $this->columnName);
         }
+
+        return sprintf('%s IS NULL', $this->columnName);
     }
 }

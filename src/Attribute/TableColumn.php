@@ -6,12 +6,15 @@ namespace Artemeon\Orm\Attribute;
 
 use Artemeon\Database\Schema\DataType;
 use Attribute;
+use InvalidArgumentException;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class TableColumn
 {
     public string $tableName;
+
     public string $columnName;
+
     public DataType $columnDataType;
 
     public function __construct(
@@ -30,13 +33,13 @@ class TableColumn
         }
 
         if (isset($columnName) && mb_strlen($columnName) > 30) {
-            throw new \InvalidArgumentException('The column name must be not larger than 30 characters');
+            throw new InvalidArgumentException('The column name must be not larger than 30 characters');
         }
 
         $this->columnDataType = $this->type;
     }
 
-    public function getValue()
+    public function getValue(): string
     {
         return $this->name;
     }

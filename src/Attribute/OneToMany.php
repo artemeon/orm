@@ -3,6 +3,7 @@
 namespace Artemeon\Orm\Attribute;
 
 use Attribute;
+use InvalidArgumentException;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class OneToMany
@@ -12,10 +13,9 @@ class OneToMany
         public string $sourceColumn,
         public string $targetColumn,
         public array $type,
-    )
-    {
+    ) {
         if (strlen($relationTable) > 30) {
-            throw new \InvalidArgumentException('The relation table name must be not larger than 30 characters');
+            throw new InvalidArgumentException('The relation table name must be not larger than 30 characters');
         }
     }
 }

@@ -6,19 +6,14 @@ use Artemeon\Database\ConnectionInterface;
 use Artemeon\Orm\Exception\OrmException;
 
 /**
- * The query builder creates a raw SQL select statement to fetch all fields
+ * The query builder creates a raw SQL select statement to fetch all fields.
  */
 class QueryBuilder
 {
-    private ConnectionInterface $connection;
-
     private array $blockedTableAlias = ['user'];
-    private EntityMeta $entityMeta;
 
-    public function __construct(ConnectionInterface $connection, EntityMeta $entityMeta)
+    public function __construct(private readonly ConnectionInterface $connection, private readonly EntityMeta $entityMeta)
     {
-        $this->connection = $connection;
-        $this->entityMeta = $entityMeta;
     }
 
     public function buildFrom(string $entityClass, ?string $joinColumn = null): string

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Artemeon\Orm\Attribute;
 
 use Attribute;
+use InvalidArgumentException;
 
 #[Attribute(Attribute::TARGET_CLASS)]
 class TableName
@@ -14,7 +15,7 @@ class TableName
         public ?string $primaryColumn = null,
     ) {
         if (strlen($tableName) > 30) {
-            throw new \InvalidArgumentException('The table name must not be larger than 30 characters');
+            throw new InvalidArgumentException('The table name must not be larger than 30 characters');
         }
     }
 }

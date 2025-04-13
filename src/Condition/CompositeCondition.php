@@ -6,24 +6,21 @@ use Artemeon\Orm\ConditionInterface;
 use Artemeon\Orm\Conjunction;
 
 /**
- * A orm condition to to store several orm conditions.
- * They will connected via given condition connect.
+ * A orm condition to store several orm conditions.
+ * They will connect via given condition connect.
  * e.g.
  *  ( (<restriction_1>) AND (<restriction_2>) AND (<restriction_3>) )
- *  ( (<restriction_1>) OR (<restriction_2>) OR (<restriction_3>) )
+ *  ( (<restriction_1>) OR (<restriction_2>) OR (<restriction_3>) ).
  */
 class CompositeCondition implements ConditionInterface
 {
-    /**
-     * @var ConditionInterface[]
-     */
-    private array $conditions;
-    private Conjunction $conjunction;
-
-    public function __construct(array $conditions = [], Conjunction $conjunction = Conjunction::AND)
-    {
-        $this->conditions = $conditions;
-        $this->conjunction = $conjunction;
+    public function __construct(
+        /**
+         * @var ConditionInterface[]
+         */
+        private array $conditions = [],
+        private Conjunction $conjunction = Conjunction::AND,
+    ) {
     }
 
     public function getConjunction(): Conjunction
@@ -34,12 +31,14 @@ class CompositeCondition implements ConditionInterface
     public function setConjunction(Conjunction $conjunction): self
     {
         $this->conjunction = $conjunction;
+
         return $this;
     }
 
     public function addCondition(ConditionInterface $condition): self
     {
         $this->conditions[] = $condition;
+
         return $this;
     }
 
@@ -53,7 +52,7 @@ class CompositeCondition implements ConditionInterface
         $where = [];
         foreach ($this->conditions as $condition) {
             $return = $condition->getWhere();
-            if (!empty($return)) {
+            if (! empty($return)) {
                 $where[] = $return;
             }
         }
@@ -76,7 +75,7 @@ class CompositeCondition implements ConditionInterface
         $params = [];
         foreach ($this->conditions as $condition) {
             $return = $condition->getWhere();
-            if (!empty($return)) {
+            if (! empty($return)) {
                 $params = array_merge($params, $condition->getParams());
             }
         }

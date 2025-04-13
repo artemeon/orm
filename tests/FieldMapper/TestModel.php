@@ -16,10 +16,10 @@ class TestModel extends TestParent
     private string $contractId;
 
     #[TableColumn('servicerid', DataType::CHAR20)]
-    private $strServicerId;
+    private ?string $strServicerId;
 
     #[TableColumn('inhouseservice', DataType::INT)]
-    private $intInhouseService;
+    private ?int $intInhouseService;
 
     #[TableColumn('outsourcing_i', DataType::CHAR20)]
     private ?string $outsourcingInstitution = null;
@@ -40,22 +40,22 @@ class TestModel extends TestParent
         $this->contractId = $contractId;
     }
 
-    public function getStrServicerId()
+    public function getStrServicerId(): ?string
     {
         return $this->strServicerId;
     }
 
-    public function setStrServicerId($strServicerId)
+    public function setStrServicerId(?string $strServicerId): void
     {
         $this->strServicerId = $strServicerId;
     }
 
-    public function getIntInhouseService()
+    public function getIntInhouseService(): ?int
     {
         return $this->intInhouseService;
     }
 
-    public function setIntInhouseService($intInhouseService)
+    public function setIntInhouseService(?int $intInhouseService): void
     {
         $this->intInhouseService = $intInhouseService;
     }
@@ -90,4 +90,3 @@ class TestModel extends TestParent
         $this->relations = $relations;
     }
 }
-
