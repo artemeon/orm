@@ -33,7 +33,7 @@ class TableColumn
         }
 
         if (isset($columnName) && mb_strlen($columnName) > 30) {
-            throw new InvalidArgumentException('The column name must be not larger then 30 characters');
+            throw new InvalidArgumentException('The column name must be not larger than 30 characters');
         }
 
         $this->columnDataType = $this->type;

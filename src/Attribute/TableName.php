@@ -15,7 +15,7 @@ class TableName
         public ?string $primaryColumn = null,
     ) {
         if (strlen($tableName) > 30) {
-            throw new InvalidArgumentException('The table name must not be larger then 30 characters');
+            throw new InvalidArgumentException('The table name must not be larger than 30 characters');
         }
     }
 }
