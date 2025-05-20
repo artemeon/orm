@@ -28,7 +28,7 @@
         }
     },
     "require": {
-        "artemeon/database": "^4.0",
+        "artemeon/database": "dev-add-column-check",
         "doctrine/collections": "^2.0",
         "php": ">=8.4",
         "psr/simple-cache": "^3.0"
