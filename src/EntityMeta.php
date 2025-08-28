@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Artemeon\Orm;
 
 use Artemeon\Database\Schema\DataType;
@@ -32,6 +34,7 @@ class EntityMeta
         if ($this->cache->has($cacheKey)) {
             return $this->cache->get($cacheKey);
         }
+
         $types = $this->getTypesFromEntity($entityClass);
         $this->cache->set($cacheKey, $types);
 
@@ -75,6 +78,7 @@ class EntityMeta
         if ($this->cache->has($cacheKey)) {
             return $this->cache->get($cacheKey);
         }
+
         $types = $this->getTableNamesFromEntity($entityClass);
         $this->cache->set($cacheKey, $types);
 
@@ -90,11 +94,13 @@ class EntityMeta
         if ($tableName instanceof TableName) {
             $result[$class->getName()] = $tableName->tableName;
         }
+
         while ($parentClass = $class->getParentClass()) {
             $tableName = $this->findTableNameAttribute($parentClass);
             if ($tableName instanceof TableName) {
                 $result[$parentClass->getName()] = $tableName->tableName;
             }
+
             $class = $parentClass;
         }
 

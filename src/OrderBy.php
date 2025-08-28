@@ -1,20 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Artemeon\Orm;
 
 /**
  * A single order-by statement.
- * Pass them to the objectlist-instance before loading the resultset.
- * Pass values using the syntax "columnmame ORDER". Don't add "ORDER BY" or commas since this
- * will be done by the mapper.
+ * Pass them to the object-list-instance before loading the resultset.
+ * Pass values using the syntax "column_mame ORDER". Don't add "ORDER BY" or commas since this
+ * gets handled by the mapper.
  */
 class OrderBy implements OrderByInterface
 {
-    private string $orderBy;
+    private string $orderBy {
+        set => $this->orderBy = ' ' . $value . ' ';
+    }
 
     public function __construct(string $orderBy)
     {
-        $this->orderBy = ' ' . $orderBy . ' ';
+        $this->orderBy = $orderBy;
     }
 
     public function setOrderBy(string $orderBy): void

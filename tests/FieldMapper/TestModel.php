@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Artemeon\Orm\Tests\FieldMapper;
 
 use Artemeon\Database\Schema\DataType;
@@ -15,11 +17,11 @@ class TestModel extends TestParent
     #[TablePrimary('contract_id')]
     private string $contractId;
 
-    #[TableColumn('servicerid', DataType::CHAR20)]
-    private ?string $strServicerId;
+    #[TableColumn('agp_contracts_con.servicerid', DataType::CHAR20)]
+    private ?string $strServicerId = null;
 
     #[TableColumn('inhouseservice', DataType::INT)]
-    private ?int $intInhouseService;
+    private ?int $intInhouseService = null;
 
     #[TableColumn('outsourcing_i', DataType::CHAR20)]
     private ?string $outsourcingInstitution = null;

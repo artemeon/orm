@@ -1,19 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Artemeon\Orm;
 
 use Artemeon\Database\ConnectionInterface;
 use Artemeon\Orm\Exception\OrmException;
 
 /**
- * The field mapper is a basic service which reads all annotations from a model and maps the values from a row to the model.
+ * The field mapper is a basic service that reads all annotations from a model and maps the values from a row to the model.
  */
-class FieldMapper
+readonly class FieldMapper
 {
-    private readonly QueryBuilder $queryBuilder;
+    private QueryBuilder $queryBuilder;
 
-    public function __construct(private readonly EntityMeta $entityMeta, private readonly ConnectionInterface $connection, private readonly Converter $converter)
-    {
+    public function __construct(
+        private EntityMeta $entityMeta,
+        private ConnectionInterface $connection,
+        private Converter $converter,
+    ) {
         $this->queryBuilder = new QueryBuilder($this->connection, $this->entityMeta);
     }
 
@@ -27,7 +32,7 @@ class FieldMapper
         $properties = $this->entityMeta->getProperties($entity::class);
         foreach ($properties as $config) {
             if ($config[0] === EntityMeta::TYPE_FIELD) {
-                [$fieldType, $class, $setter, $getter, $columnName, $dataType, $type, $length, $nullable, $default, $isPrimary] = $config;
+                [,, $setter,, $columnName, $dataType] = $config;
 
                 if (! isset($row[$columnName])) {
                     continue;
@@ -35,7 +40,7 @@ class FieldMapper
 
                 $value = $this->converter->toPHPType($row[$columnName], $dataType);
             } elseif ($config[0] === EntityMeta::TYPE_ONE_TO_MANY) {
-                [$type, $class, $setter, $getter, $relationTable, $sourceColumn, $targetColumn, $types] = $config;
+                [,, $setter,, $relationTable, $sourceColumn,, $types] = $config;
 
                 $value = new Collection($relationTable, $sourceColumn, $types, $row[$sourcePrimaryColumn], $this->connection, $this, $this->queryBuilder);
             } else {

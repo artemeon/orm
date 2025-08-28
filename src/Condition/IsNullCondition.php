@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Artemeon\Orm\Condition;
 
+use Artemeon\Orm\Comparator;
 use Artemeon\Orm\ConditionInterface;
 
 use function sprintf;
 
-class IsNullCondition implements ConditionInterface
+readonly class IsNullCondition implements ConditionInterface
 {
-    public function __construct(private readonly string $columnName, private readonly bool $negated = false)
-    {
+    public function __construct(
+        private string $columnName,
+        private bool $negated = false,
+    ) {
     }
 
     public function getParams(): array
@@ -21,10 +24,11 @@ class IsNullCondition implements ConditionInterface
 
     public function getWhere(): string
     {
-        if ($this->negated) {
-            return sprintf('%s IS NOT NULL', $this->columnName);
-        }
+        return sprintf('%s %s', $this->columnName, $this->getComparator()->toSql());
+    }
 
-        return sprintf('%s IS NULL', $this->columnName);
+    private function getComparator(): Comparator
+    {
+        return $this->negated ? Comparator::IS_NOT_NULL : Comparator::IS_NULL;
     }
 }

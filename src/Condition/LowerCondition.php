@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Artemeon\Orm\Condition;
 
+use Artemeon\Orm\Comparator;
 use Artemeon\Orm\ConditionInterface;
 
 use function sprintf;
 
-class LowerCondition implements ConditionInterface
+readonly class LowerCondition implements ConditionInterface
 {
-    public function __construct(private readonly string $columnName, private readonly mixed $value, private readonly bool $inclusive = false)
-    {
+    public function __construct(
+        private string $columnName,
+        private mixed $value,
+        private bool $inclusive = false,
+    ) {
     }
 
     public function getParams(): array
@@ -21,10 +25,11 @@ class LowerCondition implements ConditionInterface
 
     public function getWhere(): string
     {
-        if ($this->inclusive) {
-            return sprintf('%s <= ?', $this->columnName);
-        }
+        return sprintf('%s %s ?', $this->columnName, $this->getComparator()->toSql());
+    }
 
-        return sprintf('%s < ?', $this->columnName);
+    private function getComparator(): Comparator
+    {
+        return $this->inclusive ? Comparator::LESS_THEN_EQUALS : Comparator::LESS_THEN;
     }
 }

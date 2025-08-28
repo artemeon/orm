@@ -39,7 +39,7 @@ abstract class EntityManagerTestCase extends TestCase
 
     protected function getConnection(): ConnectionInterface
     {
-        if (self::$connection !== null) {
+        if (self::$connection instanceof ConnectionInterface) {
             return self::$connection;
         }
 
@@ -58,7 +58,7 @@ abstract class EntityManagerTestCase extends TestCase
 
     protected function getEntityManager(): EntityManager
     {
-        if (self::$entityManager !== null) {
+        if (self::$entityManager instanceof EntityManager) {
             return self::$entityManager;
         }
 
@@ -72,7 +72,7 @@ abstract class EntityManagerTestCase extends TestCase
 
     protected function getSchemaManager(): SchemaManager
     {
-        if (self::$schemaManager !== null) {
+        if (self::$schemaManager instanceof SchemaManager) {
             return self::$schemaManager;
         }
 
@@ -83,7 +83,7 @@ abstract class EntityManagerTestCase extends TestCase
 
     protected function getEntityMeta(): EntityMeta
     {
-        return self::$entityMeta ?: self::$entityMeta = new EntityMeta(new Psr16Cache(new ArrayAdapter()));
+        return self::$entityMeta instanceof EntityMeta ? self::$entityMeta : self::$entityMeta = new EntityMeta(new Psr16Cache(new ArrayAdapter()));
     }
 
     protected function flushDBCache(): void

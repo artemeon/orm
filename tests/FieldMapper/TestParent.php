@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Artemeon\Orm\Tests\FieldMapper;
 
 use Artemeon\Database\Schema\DataType;

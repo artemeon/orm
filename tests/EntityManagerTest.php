@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Artemeon\Orm\Tests;
 
 use Artemeon\Orm\Condition\EqualsCondition;
@@ -30,6 +32,7 @@ class EntityManagerTest extends EntityManagerTestCase
     {
         $relation = new TestParent();
         $relation->setOwner('foobar');
+
         $collection = new ArrayCollection();
         $collection->add($relation);
 

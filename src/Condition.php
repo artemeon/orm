@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Artemeon\Orm;
 
 use Artemeon\Orm\Condition\CompositeCondition;
@@ -47,7 +49,7 @@ class Condition implements ConditionInterface
 
     public function isEmpty(): bool
     {
-        return empty($this->where);
+        return $this->where === '' || $this->where === '0';
     }
 
     /**
@@ -56,29 +58,39 @@ class Condition implements ConditionInterface
     final public static function forValue(mixed $value, string $tableColumn, ?Comparator $comparator = null): ?ConditionInterface
     {
         if (is_string($value)) {
-            if ($comparator === null || $comparator === Comparator::LIKE) {
+            if (!$comparator instanceof Comparator || $comparator === Comparator::LIKE) {
                 return new LikeCondition($tableColumn, '%' . $value . '%');
             }
 
             return new Condition($tableColumn . ' ' . $comparator->toSql() . ' ?', [$value]);
-        } elseif (is_int($value) || is_float($value)) {
-            if ($comparator === null || $comparator === Comparator::EQUAL) {
+        }
+
+        if (is_int($value) || is_float($value)) {
+            if (!$comparator instanceof Comparator || $comparator === Comparator::EQUAL) {
                 return new EqualsCondition($tableColumn, $value);
             }
 
             return new Condition($tableColumn . ' ' . $comparator->toSql() . ' ?', [$value]);
-        } elseif (is_bool($value)) {
-            if ($comparator === null || $comparator === Comparator::EQUAL) {
+        }
+
+        if (is_bool($value)) {
+            if (!$comparator instanceof Comparator || $comparator === Comparator::EQUAL) {
                 return new EqualsCondition($tableColumn, $value ? 1 : 0);
             }
 
             return new Condition($tableColumn . ' ' . $comparator->toSql() . ' ?', [$value]);
-        } elseif (null === $value) {
+        }
+
+        if (null === $value) {
             return new IsNullCondition($tableColumn, $comparator === Comparator::IS_NOT_NULL);
-        } elseif (is_array($value)) {
+        }
+
+        if (is_array($value)) {
             if ($comparator === Comparator::IN_OR_EMPTY) {
                 return new CompositeCondition([new InCondition($tableColumn, $value), new EmptyCondition($tableColumn)], Conjunction::OR);
-            } elseif ($comparator === Comparator::NOT_IN_OR_EMPTY) {
+            }
+
+            if ($comparator === Comparator::NOT_IN_OR_EMPTY) {
                 return new CompositeCondition([new InCondition($tableColumn, $value, true), new EmptyCondition($tableColumn)], Conjunction::OR);
             }
 

@@ -5,11 +5,11 @@
     "description": "",
     "scripts": {
         "phpstan": "php ./vendor/bin/phpstan analyse --memory-limit=4G",
-        "pint": "./vendor/bin/pint --test -v",
-        "pint:fix": "./vendor/bin/pint",
-        "test": "./vendor/bin/pest",
-        "test:coverage": "XDEBUG_MODE=coverage ./vendor/bin/pest --coverage --min=63.2",
-        "test:type-coverage": "XDEBUG_MODE=coverage ./vendor/bin/pest --type-coverage --min=99.8"
+        "pint": "./vendor/bin/pint --test -v --parallel",
+        "pint:fix": "./vendor/bin/pint -v --parallel",
+        "test": "./vendor/bin/pest --parallel",
+        "test:coverage": "XDEBUG_MODE=coverage ./vendor/bin/pest --coverage --parallel --min=84.6",
+        "test:type-coverage": "XDEBUG_MODE=coverage ./vendor/bin/pest --type-coverage --min=100"
     },
     "authors": [
         {
