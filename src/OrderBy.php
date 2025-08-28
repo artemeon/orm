@@ -12,13 +12,11 @@ namespace Artemeon\Orm;
  */
 class OrderBy implements OrderByInterface
 {
-    private string $orderBy {
-        set => $this->orderBy = ' ' . $value . ' ';
-    }
-
-    public function __construct(string $orderBy)
-    {
-        $this->orderBy = $orderBy;
+    public function __construct(
+        private string $orderBy {
+            set => $this->orderBy = ' ' . $value . ' ';
+        },
+    ) {
     }
 
     public function setOrderBy(string $orderBy): void
