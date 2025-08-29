@@ -1,15 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Artemeon\Orm;
 
 use Artemeon\Database\ConnectionInterface;
 use Artemeon\Database\Schema\DataType;
 use Artemeon\Orm\Exception\OrmException;
 
-class SchemaManager
+readonly class SchemaManager
 {
-    public function __construct(private readonly ConnectionInterface $connection, private readonly EntityMeta $entityMeta)
-    {
+    public function __construct(
+        private ConnectionInterface $connection,
+        private EntityMeta $entityMeta,
+    ) {
     }
 
     public function createTable(string $entityClass): void
@@ -36,7 +40,7 @@ class SchemaManager
 
         foreach ($properties as $config) {
             if ($config[0] === EntityMeta::TYPE_FIELD) {
-                [$fieldType, $class, $setter, $getter, $columnName, $dataType, $type, $length, $nullable, $default, $isPrimary] = $config;
+                [, $class,,, $columnName,, $type,, $nullable, $default, $isPrimary] = $config;
 
                 if ($entityClass !== $class) {
                     continue;
@@ -52,7 +56,7 @@ class SchemaManager
                     $default,
                 ];
             } elseif ($config[0] === EntityMeta::TYPE_ONE_TO_MANY) {
-                [$type, $class, $setter, $getter, $relationTable, $sourceColumn, $targetColumn, $types] = $config;
+                [,,,, $relationTable, $sourceColumn, $targetColumn] = $config;
 
                 $relationColumns = [
                     $sourceColumn => [DataType::CHAR20, false],

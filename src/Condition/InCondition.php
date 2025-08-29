@@ -1,49 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Artemeon\Orm\Condition;
 
-use Artemeon\Orm\Condition;
-use Artemeon\Orm\Exception\OrmException;
-use Override;
+use Artemeon\Orm\Comparator;
+use Artemeon\Orm\ConditionInterface;
+use Artemeon\Orm\Conjunction;
 
 /**
  * A orm condition may be used to create where conditions for the objectList and objectCount queries.
  * This condition creates an IN statement e.g. "AND <columnname> IN (<parameters>)".
  */
-class InCondition extends Condition
+readonly class InCondition implements ConditionInterface
 {
     /**
      * @internal
      */
     public const int MAX_IN_VALUES = 950;
 
-    public function __construct(protected string $columnName, array $params, protected bool $negated = false)
-    {
-        parent::__construct('', $params);
+    public function __construct(
+        private string $columnName,
+        private array $params,
+        private bool $negated = false,
+    ) {
     }
 
-    /**
-     * @throws OrmException
-     */
-    #[Override]
-    public function setParams(array $params): void
+    public function getParams(): array
     {
-        throw new OrmException('Setting params for property IN restrictions is not supported');
+        return $this->params;
     }
 
-    /**
-     * @throws OrmException
-     */
-    #[Override]
-    public function setWhere(string $where): void
-    {
-        throw new OrmException('Setting a where restriction for property IN restrictions is not supported');
-    }
-
-    /**
-     * Here comes the magic, generation a where restriction out of the passed property name and the comparator.
-     */
-    #[Override]
     public function getWhere(): string
     {
         return $this->getInStatement($this->columnName);
@@ -51,11 +38,11 @@ class InCondition extends Condition
 
     protected function getInStatement(string $columnName): string
     {
-        if (count($this->params) === 0) {
+        if ($this->params === []) {
             return '';
         }
 
-        $operator = $this->negated ? 'NOT IN' : 'IN';
+        $operator = $this->negated ? Comparator::NOT_IN : Comparator::IN;
 
         if (count($this->params) > self::MAX_IN_VALUES) {
             $count = ceil(count($this->params) / self::MAX_IN_VALUES);
@@ -63,22 +50,20 @@ class InCondition extends Condition
 
             for ($i = 0; $i < $count; $i++) {
                 $params = array_slice($this->params, $i * self::MAX_IN_VALUES, self::MAX_IN_VALUES);
-                $paramsPlaceholder = array_map(static fn (mixed $value) => '?', $params);
+                $paramsPlaceholder = array_map(static fn (mixed $value): string => '?', $params);
                 $placeholder = implode(',', $paramsPlaceholder);
-                if (! empty($placeholder)) {
-                    $parts[] = "{$columnName} {$operator} ({$placeholder})";
+                if ($placeholder !== '') {
+                    $parts[] = sprintf('%s %s (%s)', $columnName, $operator->toSql(), $placeholder);
                 }
             }
 
-            if (count($parts) > 0) {
-                return '(' . implode(' OR ', $parts) . ')';
+            if ($parts !== []) {
+                return '(' . implode(' ' . Conjunction::OR->toSql() . ' ', $parts) . ')';
             }
         } else {
-            $placeholder = trim(str_repeat('?,', count($this->params)), ',');
+            $placeholder = implode(',', array_map(static fn (mixed $value): string => '?', $this->params));
 
-            if ($placeholder !== '' && $placeholder !== '0') {
-                return "{$columnName} {$operator} ({$placeholder})";
-            }
+            return sprintf('%s %s (%s)', $columnName, $operator->toSql(), $placeholder);
         }
 
         return '';

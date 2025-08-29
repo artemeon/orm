@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Artemeon\Orm;
 
 use Artemeon\Database\ConnectionInterface;
@@ -12,14 +14,16 @@ class QueryBuilder
 {
     private array $blockedTableAlias = ['user'];
 
-    public function __construct(private readonly ConnectionInterface $connection, private readonly EntityMeta $entityMeta)
-    {
+    public function __construct(
+        private readonly ConnectionInterface $connection,
+        private readonly EntityMeta $entityMeta,
+    ) {
     }
 
     public function buildFrom(string $entityClass, ?string $joinColumn = null): string
     {
         $targetTables = $this->entityMeta->getTableNames($entityClass);
-        if (count($targetTables) == 0) {
+        if ($targetTables === []) {
             throw new OrmException('Entity ' . $entityClass . ' has no target table');
         }
 
@@ -35,12 +39,10 @@ class QueryBuilder
                 } else {
                     $parts[] = 'FROM ' . $enclosedTable . ' AS ' . $enclosedTable;
                 }
+            } elseif (in_array($tableName, $this->blockedTableAlias, true)) {
+                $parts[] = 'INNER JOIN ' . $enclosedTable . ' ON ' . $primaryColumn . ' = ' . $firstPrimaryKey;
             } else {
-                if (in_array($tableName, $this->blockedTableAlias)) {
-                    $parts[] = 'INNER JOIN ' . $enclosedTable . ' ON ' . $primaryColumn . ' = ' . $firstPrimaryKey;
-                } else {
-                    $parts[] = 'INNER JOIN ' . $enclosedTable . ' AS ' . $enclosedTable . ' ON ' . $enclosedTable . '.' . $primaryColumn . ' = ' . $firstPrimaryKey;
-                }
+                $parts[] = 'INNER JOIN ' . $enclosedTable . ' AS ' . $enclosedTable . ' ON ' . $enclosedTable . '.' . $primaryColumn . ' = ' . $firstPrimaryKey;
             }
         }
 

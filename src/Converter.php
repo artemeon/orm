@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Artemeon\Orm;
 
 use Artemeon\Database\Schema\DataType;

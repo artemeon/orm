@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Artemeon\Orm;
 
 use Artemeon\Database\ConnectionInterface;
@@ -17,7 +19,7 @@ class Collection extends AbstractLazyCollection
     public function __construct(
         private readonly string $relationTable,
         private readonly string $sourceColumn,
-        private array $type,
+        private readonly array $type,
         private readonly string $primaryValue,
         private readonly ConnectionInterface $connection,
         private readonly FieldMapper $mapper,

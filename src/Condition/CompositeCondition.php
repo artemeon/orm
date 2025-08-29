@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Artemeon\Orm\Condition;
 
 use Artemeon\Orm\ConditionInterface;
 use Artemeon\Orm\Conjunction;
 
 /**
- * A orm condition to store several orm conditions.
- * They will connect via given condition connect.
- * e.g.
- *  ( (<restriction_1>) AND (<restriction_2>) AND (<restriction_3>) )
- *  ( (<restriction_1>) OR (<restriction_2>) OR (<restriction_3>) ).
+ * An orm condition to store several orm conditions.
+ * They will connect via the given conjunction.
  */
 class CompositeCondition implements ConditionInterface
 {
@@ -44,7 +43,7 @@ class CompositeCondition implements ConditionInterface
 
     public function hasConditions(): bool
     {
-        return count($this->conditions) > 0;
+        return $this->conditions !== [];
     }
 
     public function getWhere(): string
@@ -58,13 +57,9 @@ class CompositeCondition implements ConditionInterface
         }
 
         $result = '';
-        if (count($where) > 0) {
+        if ($where !== []) {
             $result = implode(') ' . $this->conjunction->toSql() . ' (', $where);
-            if (count($where) == 1) {
-                $result = '(' . $result . ')';
-            } else {
-                $result = '( (' . $result . ') )';
-            }
+            $result = count($where) === 1 ? '(' . $result . ')' : '( (' . $result . ') )';
         }
 
         return $result;

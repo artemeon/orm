@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Artemeon\Orm;
 
 use Artemeon\Database\ConnectionInterface;
@@ -47,7 +49,7 @@ class EntityManager
         [$query, $params] = $this->getQuery($targetClass, $conditions, $sorting);
 
         $row = $this->connection->fetchAssociative($query, $params);
-        if (empty($row)) {
+        if ($row === [] || $row === false) {
             return null;
         }
 
@@ -96,7 +98,7 @@ class EntityManager
             $params = array_merge($params, $condition->getParams());
         }
 
-        if (count($sorting) > 0) {
+        if ($sorting !== []) {
             $query .= ' ORDER BY ';
             foreach ($sorting as $sort) {
                 if (! $sort instanceof OrderBy) {
@@ -172,6 +174,7 @@ class EntityManager
                 if (! isset($data[$tableName])) {
                     $data[$tableName] = [];
                 }
+
                 if (! isset($identifiers[$tableName])) {
                     $identifiers[$tableName] = [];
                 }
@@ -267,7 +270,7 @@ class EntityManager
             $this->connection->delete($relationTable, [$sourceColumn => $sourcePrimaryId]);
             foreach ($collection as $relationEntity) {
                 $relationEntityId = $this->entityMeta->getPrimaryId($relationEntity);
-                if (empty($relationEntityId)) {
+                if ($relationEntityId === null || $relationEntityId === '' || $relationEntityId === '0') {
                     $relationEntityId = $this->insert($relationEntity);
                 }
 
