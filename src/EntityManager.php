@@ -286,7 +286,7 @@ class EntityManager
             $this->connection->delete($relationTable, [$sourceColumn => $sourcePrimaryId]);
             foreach ($collection as $relationEntity) {
                 $relationEntityId = $this->entityMeta->getPrimaryId($relationEntity);
-                if ($relationEntityId === null || $relationEntityId === '' || $relationEntityId === '0') {
+                if (in_array($relationEntityId, [null, '', '0'], true)) {
                     $relationEntityId = $this->insert($relationEntity);
                 }
 

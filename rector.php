@@ -11,7 +11,6 @@ return RectorConfig::configure()
         codingStyle: true,
         typeDeclarations: true,
         earlyReturn: true,
-        strictBooleans: true,
     )
     ->withPhpSets()
     ->withAttributesSets(phpunit: true)
