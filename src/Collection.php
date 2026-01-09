@@ -16,6 +16,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Collection extends AbstractLazyCollection
 {
+    /**
+     * @param list<class-string> $type
+     */
     public function __construct(
         private readonly string $relationTable,
         private readonly string $sourceColumn,

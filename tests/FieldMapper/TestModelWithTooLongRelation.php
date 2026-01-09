@@ -16,6 +16,9 @@ class TestModelWithTooLongRelation implements EntityInterface
     #[TablePrimary('my_id')]
     private string $myId;
 
+    /**
+     * @var Collection<int, TestParent>|null
+     */
     #[OneToMany('some_really_long__relation_name', 'contract_id', 'system_id', [TestParent::class])]
     private ?Collection $relations = null;
 
@@ -29,11 +32,17 @@ class TestModelWithTooLongRelation implements EntityInterface
         $this->myId = $myId;
     }
 
+    /**
+     * @return Collection<int, TestParent>|null
+     */
     public function getRelations(): ?Collection
     {
         return $this->relations;
     }
 
+    /**
+     * @param Collection<int, TestParent>|null $relations
+     */
     public function setRelations(?Collection $relations): void
     {
         $this->relations = $relations;

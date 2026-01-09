@@ -19,6 +19,9 @@ readonly class InCondition implements ConditionInterface
      */
     public const int MAX_IN_VALUES = 950;
 
+    /**
+     * @param list<mixed> $params
+     */
     public function __construct(
         private string $columnName,
         private array $params,

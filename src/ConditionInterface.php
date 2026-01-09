@@ -17,6 +17,8 @@ interface ConditionInterface
 
     /**
      * Returns an array of the params for the given condition.
+     *
+     * @return list<mixed>
      */
     public function getParams(): array;
 }

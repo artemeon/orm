@@ -12,6 +12,9 @@ use Artemeon\Orm\Exception\OrmException;
  */
 class QueryBuilder
 {
+    /**
+     * @var list<non-empty-string>
+     */
     private array $blockedTableAlias = ['user'];
 
     public function __construct(

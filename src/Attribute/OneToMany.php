@@ -10,6 +10,9 @@ use InvalidArgumentException;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class OneToMany
 {
+    /**
+     * @param list<class-string> $type
+     */
     public function __construct(
         public string $relationTable,
         public string $sourceColumn,

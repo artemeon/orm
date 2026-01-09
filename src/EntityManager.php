@@ -16,8 +16,8 @@ class EntityManager
     }
 
     /**
-     * @param array<ConditionInterface> $conditions
-     * @param array<OrderByInterface> $sorting
+     * @param list<ConditionInterface> $conditions
+     * @param list<OrderByInterface> $sorting
      *
      * @throws OrmException
      *
@@ -83,6 +83,12 @@ class EntityManager
         return (int) $row['cnt'];
     }
 
+    /**
+     * @param list<ConditionInterface> $conditions
+     * @param list<OrderByInterface> $sorting
+     *
+     * @return array{string, list<mixed>}
+     */
     private function getQuery(string $targetClass, array $conditions = [], array $sorting = []): array
     {
         $from = $this->queryBuilder->buildFrom($targetClass);
@@ -243,6 +249,13 @@ class EntityManager
         $this->connection->transactionCommit();
     }
 
+    /**
+     * @param list<mixed> $config
+     *
+     * @throws OrmException
+     *
+     * @return array{DoctrineCollection<int,object>,string,string,string,list<class-string>}
+     */
     private function getRelation(EntityInterface $entity, array $config): array
     {
         [$type, $class, $setter, $getter, $relationTable, $sourceColumn, $targetColumn, $types] = $config;
@@ -260,6 +273,9 @@ class EntityManager
         return [$value, $relationTable, $sourceColumn, $targetColumn, $types];
     }
 
+    /**
+     * @param list<array{DoctrineCollection<int,object>,string,string,string,list<class-string>}> $relations
+     */
     private function handleRelations(EntityInterface $entity, array $relations): void
     {
         $sourcePrimaryId = $this->entityMeta->getPrimaryId($entity);
