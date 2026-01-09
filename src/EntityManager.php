@@ -16,6 +16,7 @@ class EntityManager
     }
 
     /**
+     * @param class-string<EntityInterface> $targetClass
      * @param list<ConditionInterface> $conditions
      * @param list<OrderByInterface> $sorting
      *
@@ -39,8 +40,9 @@ class EntityManager
     }
 
     /**
-     * @param array<ConditionInterface> $conditions
-     * @param array<OrderByInterface> $sorting
+     * @param class-string<EntityInterface> $targetClass
+     * @param list<ConditionInterface> $conditions
+     * @param list<OrderByInterface> $sorting
      *
      * @throws OrmException
      */
@@ -60,6 +62,7 @@ class EntityManager
     }
 
     /**
+     * @param class-string $targetClass
      * @param array<ConditionInterface> $conditions
      *
      * @throws OrmException
@@ -84,6 +87,7 @@ class EntityManager
     }
 
     /**
+     * @param class-string $targetClass
      * @param list<ConditionInterface> $conditions
      * @param list<OrderByInterface> $sorting
      *
@@ -254,7 +258,7 @@ class EntityManager
      *
      * @throws OrmException
      *
-     * @return array{DoctrineCollection<int,object>,string,string,string,list<class-string>}
+     * @return array{DoctrineCollection<int,EntityInterface>,string,string,string,list<class-string>}
      */
     private function getRelation(EntityInterface $entity, array $config): array
     {
@@ -274,7 +278,7 @@ class EntityManager
     }
 
     /**
-     * @param list<array{DoctrineCollection<int,object>,string,string,string,list<class-string>}> $relations
+     * @param list<array{DoctrineCollection<int,EntityInterface>,string,string,string,list<class-string>}> $relations
      */
     private function handleRelations(EntityInterface $entity, array $relations): void
     {
