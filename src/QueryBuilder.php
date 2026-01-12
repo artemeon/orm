@@ -23,6 +23,9 @@ class QueryBuilder
     ) {
     }
 
+    /**
+     * @param class-string $entityClass
+     */
     public function buildFrom(string $entityClass, ?string $joinColumn = null): string
     {
         $targetTables = $this->entityMeta->getTableNames($entityClass);

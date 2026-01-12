@@ -16,6 +16,9 @@ readonly class SchemaManager
     ) {
     }
 
+    /**
+     * @param class-string $entityClass
+     */
     public function createTable(string $entityClass): void
     {
         $tableNames = $this->entityMeta->getTableNames($entityClass);
@@ -38,7 +41,7 @@ readonly class SchemaManager
      * @param list<mixed> $keys
      * @param array<array-key, mixed> $relationTables
      *
-     * @return array<string, list<mixed>>
+     * @return array<non-falsy-string, array{DataType,bool,mixed}>
      */
     private function getFieldsForEntity(string $entityClass, array &$keys, array &$relationTables): array
     {

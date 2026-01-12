@@ -96,14 +96,14 @@ class Condition implements ConditionInterface
 
         if (is_array($value)) {
             if ($comparator === Comparator::IN_OR_EMPTY) {
-                return new CompositeCondition([new InCondition($tableColumn, $value), new EmptyCondition($tableColumn)], Conjunction::OR);
+                return new CompositeCondition([new InCondition($tableColumn, array_values($value)), new EmptyCondition($tableColumn)], Conjunction::OR);
             }
 
             if ($comparator === Comparator::NOT_IN_OR_EMPTY) {
-                return new CompositeCondition([new InCondition($tableColumn, $value, true), new EmptyCondition($tableColumn)], Conjunction::OR);
+                return new CompositeCondition([new InCondition($tableColumn, array_values($value), true), new EmptyCondition($tableColumn)], Conjunction::OR);
             }
 
-            return new InCondition($tableColumn, $value);
+            return new InCondition($tableColumn, array_values($value));
         }
 
         return null;

@@ -46,6 +46,9 @@ class EntityMeta
         return $types;
     }
 
+    /**
+     * @param class-string $entityClass
+     */
     public function getPrimaryColumn(string $entityClass): string
     {
         $types = $this->getProperties($entityClass);
@@ -128,8 +131,8 @@ class EntityMeta
      * @return array<string, array{
      *     self::TYPE_*,
      *     class-string,
-     *     non-empty-string,
-     *     non-empty-string,
+     *     string,
+     *     string,
      * }>
      */
     private function getTypesFromEntity(string $entityClass): array
