@@ -22,6 +22,9 @@ readonly class FieldMapper
         $this->queryBuilder = new QueryBuilder($this->connection, $this->entityMeta);
     }
 
+    /**
+     * @param array<string, mixed> $row
+     */
     public function map(EntityInterface $entity, array $row): void
     {
         $sourcePrimaryColumn = $this->entityMeta->getPrimaryColumn($entity::class);

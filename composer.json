@@ -28,7 +28,7 @@
         }
     },
     "require": {
-        "artemeon/database": "^4.0",
+        "artemeon/database": "^4.0.1",
         "doctrine/collections": "^2.0",
         "php": ">=8.4",
         "psr/simple-cache": "^3.0"
@@ -44,6 +44,7 @@
         "symfony/cache": "^6.0"
     },
     "config": {
+        "process-timeout": 0,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "phpstan/extension-installer": true

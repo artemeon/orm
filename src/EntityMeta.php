@@ -28,6 +28,11 @@ class EntityMeta
     {
     }
 
+    /**
+     * @param class-string $entityClass
+     *
+     * @return array<string, mixed>
+     */
     public function getProperties(string $entityClass): array
     {
         $cacheKey = 'entity-meta-properties-' . str_replace('\\', '-', $entityClass);
@@ -72,6 +77,11 @@ class EntityMeta
         return null;
     }
 
+    /**
+     * @param class-string $entityClass
+     *
+     * @return array<class-string, string>
+     */
     public function getTableNames(string $entityClass): array
     {
         $cacheKey = 'entity-meta-table-names-' . str_replace('\\', '-', $entityClass);
@@ -85,6 +95,11 @@ class EntityMeta
         return $types;
     }
 
+    /**
+     * @param class-string $entityClass
+     *
+     * @return array<class-string, string>
+     */
     private function getTableNamesFromEntity(string $entityClass): array
     {
         $class = new ReflectionClass($entityClass);
@@ -107,6 +122,16 @@ class EntityMeta
         return $result;
     }
 
+    /**
+     * @param class-string $entityClass
+     *
+     * @return array<string, array{
+     *     self::TYPE_*,
+     *     class-string,
+     *     non-empty-string,
+     *     non-empty-string,
+     * }>
+     */
     private function getTypesFromEntity(string $entityClass): array
     {
         $class = new ReflectionClass($entityClass);
@@ -166,6 +191,9 @@ class EntityMeta
         return null;
     }
 
+    /**
+     * @param ReflectionClass<object> $class
+     */
     private function findTableNameAttribute(ReflectionClass $class): ?TableName
     {
         foreach ($class->getAttributes() as $attribute) {
@@ -210,6 +238,9 @@ class EntityMeta
         return $type->getName();
     }
 
+    /**
+     * @param ReflectionClass<object> $class
+     */
     private function getSetter(ReflectionClass $class, string $propertyName): ?string
     {
         $setter = null;
@@ -238,6 +269,9 @@ class EntityMeta
         return $setter;
     }
 
+    /**
+     * @param ReflectionClass<object> $class
+     */
     private function getGetter(ReflectionClass $class, string $propertyName): ?string
     {
         $getter = null;

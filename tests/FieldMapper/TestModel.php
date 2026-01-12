@@ -29,6 +29,9 @@ class TestModel extends TestParent
     #[TableColumn('purchasing_relevance', DataType::INT)]
     private ?int $purchasingRelevance = 0;
 
+    /**
+     * @var Collection<int, TestParent>|null
+     */
     #[OneToMany('agp_contracts_con2foo', 'contract_id', 'system_id', [TestParent::class])]
     private ?Collection $relations = null;
 
@@ -82,11 +85,17 @@ class TestModel extends TestParent
         $this->purchasingRelevance = $purchasingRelevance;
     }
 
+    /**
+     * @return Collection<int, TestParent>|null
+     */
     public function getRelations(): ?Collection
     {
         return $this->relations;
     }
 
+    /**
+     * @param Collection<int, TestParent>|null $relations
+     */
     public function setRelations(?Collection $relations): void
     {
         $this->relations = $relations;

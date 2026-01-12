@@ -33,6 +33,13 @@ readonly class SchemaManager
         }
     }
 
+    /**
+     * @param class-string $entityClass
+     * @param list<mixed> $keys
+     * @param array<array-key, mixed> $relationTables
+     *
+     * @return array<string, list<mixed>>
+     */
     private function getFieldsForEntity(string $entityClass, array &$keys, array &$relationTables): array
     {
         $properties = $this->entityMeta->getProperties($entityClass);

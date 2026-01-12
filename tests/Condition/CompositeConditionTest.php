@@ -25,6 +25,9 @@ final class CompositeConditionTest extends TestCase
         self::assertSame(['bar'], $condition->getParams());
     }
 
+    /**
+     * @return iterable<array{Conjunction}>
+     */
     public static function multipleConditionsProvider(): iterable
     {
         foreach (Conjunction::cases() as $conjunction) {

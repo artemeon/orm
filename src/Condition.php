@@ -19,14 +19,23 @@ class Condition implements ConditionInterface
 {
     protected string $where = '';
 
+    /**
+     * @var list<mixed>
+     */
     protected array $params = [];
 
+    /**
+     * @param list<mixed> $params
+     */
     public function __construct(string $where, array $params = [])
     {
         $this->setWhere($where);
         $this->setParams($params);
     }
 
+    /**
+     * @param list<mixed> $params
+     */
     public function setParams(array $params): void
     {
         $this->params = $params;

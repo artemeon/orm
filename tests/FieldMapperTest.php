@@ -8,6 +8,7 @@ use Artemeon\Database\MockConnection;
 use Artemeon\Orm\Converter;
 use Artemeon\Orm\EntityInterface;
 use Artemeon\Orm\EntityMeta;
+use Artemeon\Orm\Exception\OrmException;
 use Artemeon\Orm\FieldMapper;
 use Artemeon\Orm\Tests\FieldMapper\TestModel;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -20,6 +21,12 @@ use Symfony\Component\Cache\Psr16Cache;
  */
 class FieldMapperTest extends TestCase
 {
+    /**
+     * @param array<non-empty-string, mixed> $row
+     * @param array<non-empty-string, mixed> $expects
+     *
+     * @throws OrmException
+     */
     #[DataProvider('mapDataProvider')]
     public static function testMap(EntityInterface $entity, array $row, array $expects): void
     {
@@ -32,6 +39,13 @@ class FieldMapperTest extends TestCase
         }
     }
 
+    /**
+     * @return array{
+     *     object,
+     *     array<non-empty-string, mixed>,
+     *     array<non-empty-string, mixed>,
+     * }[]
+     */
     public static function mapDataProvider(): array
     {
         return [
