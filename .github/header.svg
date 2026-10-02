@@ -56,7 +56,7 @@
     <!-- Parent table -->
     <g transform="translate(984 48)">
       <rect width="232" height="108" rx="12" fill="#151936" stroke="#2dd4bf" stroke-opacity="0.6" stroke-width="1.5"/>
-      <text x="16" y="28" fill="#2dd4bf" font-weight="700">agp_system</text>
+      <text x="16" y="28" fill="#2dd4bf" font-weight="700">entities</text>
       <line x1="0" y1="42" x2="232" y2="42" stroke="#ffffff" stroke-opacity="0.1"/>
       <text x="16" y="68" fill="#f0c674">🔑 system_id</text>
       <text x="44" y="92" fill="#c9cbe8">owner</text>
@@ -72,7 +72,7 @@
     <!-- Child table -->
     <g transform="translate(984 196)">
       <rect width="232" height="116" rx="12" fill="#151936" stroke="#2dd4bf" stroke-opacity="0.6" stroke-width="1.5"/>
-      <text x="16" y="28" fill="#2dd4bf" font-weight="700">agp_contracts_con</text>
+      <text x="16" y="28" fill="#2dd4bf" font-weight="700">contracts</text>
       <line x1="0" y1="42" x2="232" y2="42" stroke="#ffffff" stroke-opacity="0.1"/>
       <text x="16" y="68" fill="#f0c674">🔑 contract_id</text>
       <text x="44" y="94" fill="#c9cbe8">servicerid</text>
