@@ -258,7 +258,7 @@ class EntityManager
      *
      * @throws OrmException
      *
-     * @return array{DoctrineCollection<int,EntityInterface>,string,string,string,list<class-string>}
+     * @return array{DoctrineCollection<int,EntityInterface>,string,non-empty-string,non-empty-string,list<class-string>}
      */
     private function getRelation(EntityInterface $entity, array $config): array
     {
@@ -278,7 +278,7 @@ class EntityManager
     }
 
     /**
-     * @param list<array{DoctrineCollection<int,EntityInterface>,string,string,string,list<class-string>}> $relations
+     * @param list<array{DoctrineCollection<int,EntityInterface>,string,non-empty-string,non-empty-string,list<class-string>}> $relations
      */
     private function handleRelations(EntityInterface $entity, array $relations): void
     {
