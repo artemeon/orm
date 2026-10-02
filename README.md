@@ -1,5 +1,14 @@
+<p align="center">
+  <img src=".github/header.svg" alt="Artemeon ORM: attribute-driven Data Mapper for PHP" width="100%">
+</p>
 
-# ORM
+<p align="center">
+  <a href="https://github.com/artemeon/orm/actions/workflows/tests.yml"><img src="https://img.shields.io/github/actions/workflow/status/artemeon/orm/tests.yml?branch=main&label=tests&style=for-the-badge" alt="Tests"></a>
+  <a href="https://github.com/artemeon/orm/actions/workflows/phpstan.yml"><img src="https://img.shields.io/badge/PHPStan-level%208-777BB4?style=for-the-badge" alt="PHPStan level 8"></a>
+  <a href="https://packagist.org/packages/artemeon/orm"><img src="https://img.shields.io/packagist/v/artemeon/orm?style=for-the-badge" alt="Latest version"></a>
+  <img src="https://img.shields.io/badge/PHP-%3E%3D8.4-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP >= 8.4">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-2dd4bf?style=for-the-badge" alt="MIT License"></a>
+</p>
 
 This repository contains the ORM of the AGP platform. It is extracted from the internal ORM into a general ORM which
 can be also used in other projects. It is still a work-in-progress but the idea is to eventually replace the AGP
@@ -18,16 +27,16 @@ class TestModel extends TestParent
     #[TablePrimary('contract_id')]
     private string $contractId;
 
-    #[TableColumn('servicerid', DataType::STR_TYPE_CHAR20)]
+    #[TableColumn('servicerid', DataType::CHAR20)]
     private $strServicerId;
 
-    #[TableColumn('inhouseservice', DataType::STR_TYPE_INT)]
+    #[TableColumn('inhouseservice', DataType::INT)]
     private $intInhouseService;
 
-    #[TableColumn('outsourcing_i', DataType::STR_TYPE_CHAR20)]
+    #[TableColumn('outsourcing_i', DataType::CHAR20)]
     private ?string $outsourcingInstitution = null;
 
-    #[TableColumn('purchasing_relevance', DataType::STR_TYPE_INT)]
+    #[TableColumn('purchasing_relevance', DataType::INT)]
     private ?int $purchasingRelevance = 0;
 
     // getter/setter
@@ -39,7 +48,7 @@ class TestParent implements EntityInterface
     #[TablePrimary('system_id')]
     private string $systemId;
 
-    #[TableColumn('owner', DataType::STR_TYPE_CHAR20)]
+    #[TableColumn('owner', DataType::CHAR20)]
     private ?string $owner = null;
 
     // getter/setter
