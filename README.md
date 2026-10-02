@@ -21,7 +21,7 @@ based on those attributes the ORM builds the table structure. It has a special i
 will have its own table. The ORM then automatically joins those tables on select.
 
 ```php
-#[TableName('agp_contracts_con')]
+#[TableName('contracts')]
 class TestModel extends TestParent
 {
     #[TablePrimary('contract_id')]
@@ -42,7 +42,7 @@ class TestModel extends TestParent
     // getter/setter
 }
 
-#[TableName('agp_system')]
+#[TableName('entities')]
 class TestParent implements EntityInterface
 {
     #[TablePrimary('system_id')]
@@ -56,7 +56,7 @@ class TestParent implements EntityInterface
 
 ```
 
-Those entity classes would generate two tables `agp_system` and `agp_contracts_con` with the fitting columns.
+Those entity classes would generate two tables `entities` and `contracts` with the fitting columns.
 
 ## Design
 
